@@ -232,12 +232,63 @@ details.sol summary{cursor:pointer;font-weight:800;color:var(--blue);font-size:1
 .abox.ok .atxt{font-weight:700;color:var(--ink)}
 .abox.ok.long .atxt{font-weight:500}
 .abox.ok.long .atxt b{font-weight:800}
+.abox .tbl-wrap{margin:10px 0;background:var(--surface);border-radius:10px}
 .abox.why{background:var(--blue-soft);border:1.5px solid transparent}
 .abox.why .albl{color:var(--blue)}
 .abox .akey{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--ok);color:#fff;font-size:14px;font-weight:900;margin-right:6px}
 .abox .anote{font-weight:500;color:var(--ink-2);font-size:14.5px;margin-top:6px}
 .opt.dim{opacity:.6}
 .qnum span:first-child{font-weight:900;color:var(--blue);text-transform:none}
+
+.fig{margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.fig svg{display:block;width:100%;max-width:520px;height:auto;margin:0 auto;font-family:var(--f)}
+.fig figcaption{font-size:14px;color:var(--ink-2);text-align:center;margin-top:8px;font-weight:600}
+.fig .liq{fill:#EBF0FB}.fig .solid{fill:#9AA3B5}.fig .solid2{fill:#3A3F4A}.fig .edge{stroke:#0038BD;stroke-width:2}
+.fig .f-b{fill:#0038BD}.fig .f-a{fill:#F98613}.fig .f-o{fill:#16875A}.fig .f-r{fill:#C93545}
+.fig .head{fill:#0038BD}.fig .tail{stroke:#F98613;stroke-width:3;stroke-linecap:round}
+.fig .arr{stroke:#737373;stroke-width:1.5}.fig .arr-a{stroke:#F98613;stroke-width:2.5;marker-end:none}
+.fig .ax{stroke:#171717;stroke-width:1.5}.fig .dash{stroke:#737373;stroke-dasharray:4 4}.fig .dash2{stroke:#C9CDD6;stroke-dasharray:3 4}
+.fig .c-b{fill:none;stroke:#0038BD;stroke-width:3}.fig .c-r{fill:none;stroke:#C93545;stroke-width:3}.fig .c-g{fill:none;stroke:#16875A;stroke-width:3}
+.fig .prot{fill:#16875A}.fig .prot2{fill:#7A4FD0}.fig .core{fill:#FEF1E3;stroke:#F98613}
+.fig .site{fill:#171717}.fig .box{fill:#EBF0FB;stroke:#0038BD}.fig .col1{fill:#0038BD}.fig .col2{fill:#16875A}
+.fig .colw{fill:#F3F4F7;stroke:#737373}.fig .z1{fill:#C93545}.fig .z2{fill:#F98613}.fig .z3{fill:#16875A}
+.fig .lead{stroke:#737373;stroke-width:1}
+.fig .t1{font-size:13px;font-weight:800;fill:#171717}.fig .t2{font-size:12px;font-weight:700;fill:#737373}
+.fig .t3{font-size:11px;font-weight:600;fill:#171717}.fig .t3a{font-size:11px;font-weight:800;fill:#B45A00}
+.fig .t3w{font-size:11px;font-weight:800;fill:#fff}.fig .t4{font-size:8px;font-weight:800;fill:#fff}.fig .t4w{font-size:9px;fill:#fff}
+.fig .t3r{font-size:11px;font-weight:800;fill:#C93545}.fig .t3g{font-size:11px;font-weight:800;fill:#16875A}.fig .t3b{font-size:11px;font-weight:800;fill:#0038BD}
+
+.fig{position:relative;background:linear-gradient(#fff,#fff) padding-box;border:1.5px solid #CFDCFF;box-shadow:inset 0 0 0 4px #F3F6FD}
+.fig::before{content:"ЗЕРТХАНА · LIVE";position:absolute;top:10px;left:14px;font-size:10.5px;font-weight:900;letter-spacing:.08em;color:#0038BD;background:#EBF0FB;border-radius:999px;padding:3px 9px 3px 20px}
+.fig::after{content:"";position:absolute;top:16px;left:23px;width:7px;height:7px;border-radius:50%;background:#C93545;animation:labblink 1.2s infinite}
+@keyframes labblink{50%{opacity:.15}}
+.fig svg{margin-top:18px}
+.fig .f-l{fill:#B9C8EE}.fig .f-l2{fill:#0038BD}.fig .chan{fill:#0E6B46}
+@media (prefers-reduced-motion:reduce){.fig::after{animation:none}}
+
+.lab{margin:18px 0;border:1.5px solid #0038BD;border-radius:16px;padding:16px;background:#F7F9FF}
+.lab-h{font-weight:900;font-size:16.5px;color:#0038BD;margin-bottom:4px}
+.lab-p{font-size:14.5px;color:var(--ink-2);margin:0 0 12px}
+.lab-ins{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 18px;margin-bottom:12px}
+.lab-in{display:flex;flex-direction:column;gap:4px;font-size:14.5px;font-weight:700}
+.lab-in b{color:#B45A00;font-weight:900}
+.lab-in input{width:100%;height:32px;accent-color:#F98613;cursor:pointer}
+.lab-plots{display:grid;grid-template-columns:1fr 1fr;gap:10px}.lab-plots.one{grid-template-columns:minmax(0,560px);justify-content:center}
+@media(max-width:640px){.lab-plots{grid-template-columns:1fr}}
+.lab-plots svg{width:100%;height:auto;background:#fff;border:1px solid var(--line);border-radius:12px;font-family:var(--f)}
+.lab-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:12px}
+.lab-out div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.lab-out div.wide{grid-column:1/-1}
+.lab-out span{font-size:12.5px;color:var(--ink-2);font-weight:600}.lab-out b{font-size:16px;color:#171717;font-weight:900}
+.lp-bg{fill:#fff}.lp-grid{stroke:#EEF0F4}.lp-ax{stroke:#171717;stroke-width:1.2}.lp-tk{font-size:9px;fill:#737373}.lp-lb{font-size:10.5px;font-weight:800;fill:#171717}
+.lp-dash{stroke:#737373;stroke-dasharray:4 4}.lp-dash2{stroke:#16875A;stroke-dasharray:3 4}.lp-pl{stroke:#F98613;stroke-dasharray:3 3}
+.lp-c1{fill:none;stroke:#0038BD;stroke-width:2.6}.lp-c0{fill:none;stroke:#B9C0CF;stroke-width:2}.lp-c2{fill:none;stroke:#16875A;stroke-width:1.6;stroke-dasharray:5 4}
+.lp-pt{fill:#F98613;stroke:#fff;stroke-width:2}.lp-sl{font-size:10px;font-weight:800}.lp-c1-t{fill:#0038BD}.lp-c0-t{fill:#9AA3B5}
+
+.stp{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;margin:8px 0}
+.stp>span{width:26px;height:26px;border-radius:50%;background:#0038BD;color:#fff;font-weight:900;font-size:13px;display:grid;place-items:center}
+.abox.why .tbl-wrap{background:#fff}
+.abox .tt th{text-transform:none;letter-spacing:0}
 </style>
 
 <div id="app"><div class="loading">Жүктелуде…</div></div>
@@ -1469,12 +1520,57 @@ function renderModule(id,tab,sub){
   else{renderProblems(panel,m);}
   window.scrollTo({top:0})}
 
+/* ---------- интерактивті графиктер (зертхана) ---------- */
+const LABPLOT=(svg,o)=>{ /* o:{xmax,ymax,xl,yl,series:[{f,cls}],pt:{x,y},hl:[y],vl:[x],xt,yt} */
+  const W=340,H=210,L=46,R=10,T=24,Bm=30,pw=W-L-R,ph=H-T-Bm;
+  const X=x=>L+x/o.xmax*pw,Y=y=>T+ph-Math.max(0,Math.min(y,o.ymax*1.05))/o.ymax*ph;
+  let g=`<rect x="${L}" y="${T}" width="${pw}" height="${ph}" class="lp-bg"/>`;
+  for(let k=0;k<=4;k++){const xv=o.xmax*k/4,yv=o.ymax*k/4;
+    g+=`<line x1="${X(xv)}" y1="${T}" x2="${X(xv)}" y2="${T+ph}" class="lp-grid"/><line x1="${L}" y1="${Y(yv)}" x2="${L+pw}" y2="${Y(yv)}" class="lp-grid"/>`;
+    g+=`<text x="${X(xv)}" y="${T+ph+13}" class="lp-tk" text-anchor="middle">${(o.xt||(v=>+v.toFixed(2)))(xv)}</text><text x="${L-5}" y="${Y(yv)+3}" class="lp-tk" text-anchor="end">${(o.yt||(v=>+v.toFixed(2)))(yv)}</text>`}
+  g+=`<line x1="${L}" y1="${T}" x2="${L}" y2="${T+ph}" class="lp-ax"/><line x1="${L}" y1="${T+ph}" x2="${L+pw}" y2="${T+ph}" class="lp-ax"/>`;
+  g+=`<text x="${L+pw}" y="${H-3}" class="lp-lb" text-anchor="end">${o.xl}</text><text x="4" y="14" class="lp-lb">${o.yl}</text>`;
+  (o.hl||[]).forEach(y=>g+=`<line x1="${L}" y1="${Y(y)}" x2="${L+pw}" y2="${Y(y)}" class="lp-dash"/>`);
+  (o.vl||[]).forEach(x=>g+=`<line x1="${X(x)}" y1="${T}" x2="${X(x)}" y2="${T+ph}" class="lp-dash2"/>`);
+  o.series.forEach(s=>{let d='';for(let k=0;k<=120;k++){const x=(s.x0||0)+(o.xmax-(s.x0||0))*k/120,y=s.f(x);if(!isFinite(y)||y<-o.ymax*.02)continue;if(y>o.ymax*1.08)break;d+=(d?'L':'M')+X(x).toFixed(1)+' '+Y(y).toFixed(1)}g+=`<path d="${d}" class="${s.cls}"/>`;
+    if(s.lab){const x=o.xmax*.97;g+=`<text x="${X(x)}" y="${Y(s.f(x))-5}" class="lp-sl ${s.cls}-t" text-anchor="end">${s.lab}</text>`}});
+  if(o.pt){g+=`<line x1="${X(o.pt.x)}" y1="${Y(o.pt.y)}" x2="${X(o.pt.x)}" y2="${T+ph}" class="lp-pl"/><line x1="${L}" y1="${Y(o.pt.y)}" x2="${X(o.pt.x)}" y2="${Y(o.pt.y)}" class="lp-pl"/><circle cx="${X(o.pt.x)}" cy="${Y(o.pt.y)}" r="5.5" class="lp-pt"/>`}
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML=g};
+const LABFMT=(v,d=3)=>{if(v===0)return'0';const e=Math.floor(Math.log10(Math.abs(v)));if(e>=-2&&e<4)return (+v.toFixed(d)).toString().replace('.',',');const m=v/10**e;return m.toFixed(2).replace('.',',')+'·10<sup>'+(e<0?'−'+(-e):e)+'</sup>'};
+const LAB={
+  shish(w){const v=k=>+w.querySelector(`[name=${k}]`).value,RT=8.314*v('T');
+    const s0=72.8,Bp=v('B'),n=v('n'),C=v('C'),a=0.25/3.2**(n-3);
+    const names={3:'пропанол',4:'бутанол',5:'пентанол',6:'гексанол',7:'гептанол',8:'октанол'};
+    const sig=(c,aa)=>s0-Bp*Math.log(1+c/aa),gam=(c,aa)=>Bp*1e-3*c/(RT*(aa+c));
+    const ser=[3,n].filter((x,i,ar)=>ar.indexOf(x)===i).map(k=>({f:c=>sig(c,0.25/3.2**(k-3)),cls:k===n?'lp-c1':'lp-c0',lab:names[k]}));
+    LABPLOT(w.querySelector('.lp1'),{xmax:0.5,ymax:80,xl:'C, моль/л',yl:'σ, мН/м',series:ser,pt:{x:C,y:sig(C,a)},hl:[s0],xt:v=>v.toFixed(2).replace('.',','),yt:v=>Math.round(v)});
+    const Gi=Bp*1e-3/RT;
+    LABPLOT(w.querySelector('.lp2'),{xmax:0.5,ymax:Gi*1e6*1.1,xl:'C, моль/л',yl:'Г·10⁶',series:[{f:c=>gam(c,a)*1e6,cls:'lp-c1'}],pt:{x:C,y:gam(C,a)*1e6},hl:[Gi*1e6],xt:v=>v.toFixed(2).replace('.',','),yt:v=>v.toFixed(1).replace('.',',')});
+    const g=Bp*1e-3/(a+C);
+    w.querySelector('.lab-out').innerHTML=`<div><span>a (${names[n]})</span><b>${LABFMT(a)} моль/л</b></div><div><span>σ = σ₀ − B·ln(1 + C/a)</span><b>${LABFMT(sig(C,a),1)} мН/м</b></div><div><span>g = −dσ/dC = B/(a + C)</span><b>${LABFMT(g)} Дж·м/моль</b></div><div><span>Г = C·g/RT (Гиббс)</span><b>${LABFMT(gam(C,a))} моль/м²</b></div><div><span>Г∞ = B/RT</span><b>${LABFMT(Gi)} моль/м²</b></div><div><span>Бет толуы Г/Г∞</span><b>${Math.round(gam(C,a)/Gi*100)}%</b></div>`;
+    w.querySelectorAll('[data-v]').forEach(e=>{const k=e.dataset.v,x=v(k);e.textContent=k==='n'?`C${x} (${names[x]})`:k==='C'?x.toFixed(3).replace('.',','):k==='T'?x+' К':x.toString().replace('.',',')})},
+  lang(w){const v=k=>+w.querySelector(`[name=${k}]`).value;
+    const Gi=v('Gi'),K=v('K'),C=v('C'),G=c=>Gi*c/(K+c),xm=Math.max(1,K*12);
+    LABPLOT(w.querySelector('.lp1'),{xmax:xm,ymax:Gi*1.15,xl:'C, моль/л',yl:'Г·10³',series:[{f:G,cls:'lp-c1'},{f:c=>Gi*c/K,cls:'lp-c2',x0:0}],pt:{x:Math.min(C,xm),y:G(C)},hl:[Gi],vl:[K],xt:v=>(+v.toFixed(2)).toString().replace('.',','),yt:v=>v.toFixed(1).replace('.',',')});
+    const th=G(C)/Gi,reg=C<0.1*K?'I — Генри аймағы (C ≪ K): Г ≈ Г∞·C/K, түзу':C>10*K?'III — қаныққан аймақ (C ≫ K): Г ≈ Г∞':'II — аралық аймақ: толық Ленгмюр теңдеуі';
+    w.querySelector('.lab-out').innerHTML=`<div><span>Г = Г∞·C/(K + C)</span><b>${LABFMT(G(C)*1e-3)} моль/г</b></div><div><span>Бет толуы θ = Г/Г∞</span><b>${Math.round(th*100)}%</b></div><div><span>Генри түзуі Г∞·C/K</span><b>${LABFMT(Gi*C/K*1e-3)} моль/г</b></div><div class="wide"><span>Аймақ</span><b>${reg}</b></div>`;
+    w.querySelectorAll('[data-v]').forEach(e=>{const x=v(e.dataset.v);e.textContent=x.toString().replace('.',',')})},
+  freund(w){const v=k=>+w.querySelector(`[name=${k}]`).value;
+    const K=v('K'),n1=v('n1'),C=v('C'),a=c=>K*c**n1;
+    LABPLOT(w.querySelector('.lp1'),{xmax:1,ymax:Math.max(K*1.1,0.1),xl:'C, моль/л',yl:'a, моль/кг',series:[{f:a,cls:'lp-c1'}],pt:{x:C,y:a(C)},xt:v=>v.toFixed(2).replace('.',','),yt:v=>v.toFixed(2).replace('.',',')});
+    const lk=Math.log10(K);
+    LABPLOT(w.querySelector('.lp2'),{xmax:2,ymax:3,xl:'lg C',yl:'lg a',series:[{f:x=>lk+n1*(x-2)+2,cls:'lp-c1'}],pt:{x:Math.log10(C)+2,y:Math.log10(a(C))+2},xt:v=>(v-2).toFixed(1).replace('.',','),yt:v=>(v-2).toFixed(1).replace('.',',')});
+    w.querySelector('.lab-out').innerHTML=`<div><span>a = K·C<sup>1/n</sup></span><b>${LABFMT(a(C))} моль/кг</b></div><div><span>lg a = lg K + (1/n)·lg C</span><b>${LABFMT(Math.log10(a(C)),2)}</b></div><div><span>Ординатадан кесінді lg K</span><b>${LABFMT(lk,2)}</b></div><div><span>Түзудің көлбеулігі 1/n</span><b>${n1.toString().replace('.',',')}</b></div>`;
+    w.querySelectorAll('[data-v]').forEach(e=>{const x=v(e.dataset.v);e.textContent=x.toString().replace('.',',')})}
+};
+function initLabs(root){root.querySelectorAll('.lab').forEach(w=>{const f=LAB[w.dataset.lab];if(!f)return;w.addEventListener('input',()=>f(w));f(w)})}
+
 function renderNotes(panel,m){
   panel.append(h('p',{class:'intro'},m.intro));
   const toc=h('nav',{class:'toc','aria-label':'Мазмұны'});
   m.notes.forEach((c,i)=>toc.append(h('button',{onclick:()=>document.getElementById('s'+i).scrollIntoView({behavior:'smooth'}),html:'<b>'+(i+1)+'-сұрақ.</b> '+c.short})));
   panel.append(toc);
-  m.notes.forEach((c,i)=>panel.append(h('article',{class:'sec',id:'s'+i},h('div',{class:'qn'},(i+1)+'-сұрақ'),h('h2',{},c.h),h('div',{class:'prose',html:c.body}))))}
+  m.notes.forEach((c,i)=>panel.append(h('article',{class:'sec',id:'s'+i},h('div',{class:'qn'},(i+1)+'-сұрақ'),h('h2',{},c.h),h('div',{class:'prose',html:c.body}))));initLabs(panel)}
 
 /* ---------- flashcards ---------- */
 function renderCards(panel,all,key){
@@ -1519,6 +1615,7 @@ function renderTests(panel,m,id,sub){
     g.append(card('Тақырыпты бекіту тесттері','Оқулықтағы өзін-өзі бақылау тесттері. Жауап беріп, бірден тексересіз.',sets.bekitu.length+' сұрақ',id+'_test_bekitu',!sets.bekitu.length));
     g.append(card('ТИМС тесттері','Тестілік интерактивті мониторинг жүйесінің сұрақтары.',sets.tims.length+' сұрақ',id+'_test_tims',!sets.tims.length));
     g.append(card('Вариант бойынша тесттер','Тест тапсырылмайды: дайын жауаптары мен түсіндірмелері ашық тұрады.',(Object.values(sets.variants).filter(x=>x.length).length||4)+' вариант',id+'_test_var',false));
+    if(sets.prac)g.append(card('ТӘЖІРИБЕЛІК ТАПСЫРМАЛАР','Сабақтағы тәжірибелік тапсырмалардың толық жауаптары мен есептердің шешуі.',sets.prac.length+' тапсырма',id+'_test_prac',false));
     if(sets.n2025)g.append(card('ҚОСЫМША НҰСҚАЛАР 2025','2025 жылғы қосымша варианттар: тест, теория және есептер дайын жауаптарымен.',Object.keys(sets.n2025).length+' вариант',id+'_test_n25',false));
     panel.append(g);return}
   const backBtn=h('a',{class:'back-link',href:'#'+id+'_test',style:'display:inline-block;margin-bottom:12px'},'← Тест түрлері');
@@ -1532,6 +1629,9 @@ function renderTests(panel,m,id,sub){
     [['view','Жауаптарымен қарау'],['quiz','Тест тапсыру']].forEach(([k,l],i)=>seg.append(h('button',{'aria-pressed':String(k===first),onclick:e=>{seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===e.currentTarget)));area.innerHTML='';k==='quiz'?runQuiz(area,qs,sub==='bekitu'?id:null):renderReview(area,qs)}},l)));
     mode.append(h('h2',{style:'font-size:20px;font-weight:800;margin-right:auto'},title),seg);
     panel.append(mode,area);first==='view'?renderReview(area,qs):runQuiz(area,qs,sub==='bekitu'?id:null);return}
+  if(sub==='prac'){
+    panel.append(h('h2',{style:'font-size:20px;font-weight:800;margin-bottom:6px'},'ТӘЖІРИБЕЛІК ТАПСЫРМАЛАР'),h('p',{class:'muted',style:'margin:0 0 4px'},'Әр тапсырманың толық жауабы, кестелері және есептердің шешуі.'));
+    const area=h('div');panel.append(area);renderReview(area,sets.prac||[]);return}
   if(sub==='n25'||/^n25v\d$/.test(sub)){
     const N=sets.n2025||{};const keys=Object.keys(N);
     panel.append(h('h2',{style:'font-size:20px;font-weight:800;margin-bottom:6px'},'ҚОСЫМША НҰСҚАЛАР 2025'),h('p',{class:'muted',style:'margin:0 0 4px'},'Вариантты таңдаңыз. Дұрыс жауаптар белгіленген, есептер толық шығарылған.'));
@@ -1560,14 +1660,15 @@ function renderReview(area,qs){
   const list=h('div',{class:'review'});
   const box=(cls,lbl,html)=>h('div',{class:'abox '+cls},h('div',{class:'albl'},lbl),h('div',{class:'atxt',html}));
   qs.forEach((q,i)=>{
-    const c=h('div',{class:'qcard'},h('div',{class:'qnum'},h('span',{},(i+1)+'-сұрақ'),q.o.length?(q.ans.length>1?h('span',{},'Бірнеше дұрыс жауап'):h('span',{},'Бір дұрыс жауап')):h('span',{},q.lbl?'Теориялық сұрақ':'Есеп')),h('div',{class:'qtext',html:q.q.replace(/^\s*\d+\.\s*/,'')}));
+    const c=h('div',{class:'qcard'},h('div',{class:'qnum'},h('span',{},(i+1)+'-сұрақ'),q.o.length?(q.ans.length>1?h('span',{},'Бірнеше дұрыс жауап'):h('span',{},'Бір дұрыс жауап')):h('span',{},q.lbl?(q.tag||'Тапсырма'):'Есеп')),h('div',{class:'qtext',html:q.q.replace(/^\s*\d+\.\s*/,'')}));
     if(q.o.length){
       const o=h('div',{class:'opts'});q.o.forEach((_,j)=>o.append(optRow(q,j,q.ans.includes(j)?'correct':'dim',true)));c.append(o);
       c.append(box('ok',q.ans.length>1?'✓ Дұрыс жауаптар':'✓ Дұрыс жауап',q.ans.map(j=>'<span class="akey">'+LET[j]+'</span> '+q.o[j]).join('<br>')));
       if(q.e)c.append(box('why','Себебі',q.e));
     }else if(q.e){
       const m=q.e.match(/<br><b>Жауабы:\s*([\s\S]*?)<\/b>/);
-      if(q.lbl||!m){c.append(box('ok long','✓ Жауабы',q.e))}
+      if(q.say){c.append(box('ok long','🎓 Мұғалімге былай жауап беріңіз',q.say));c.append(box('why','Толық түсіндірме',q.e))}
+      else if(q.lbl||!m){c.append(box('ok long','✓ Жауабы',q.e))}
       else{const steps=q.e.slice(0,m.index),rest=q.e.slice(m.index+m[0].length);
         c.append(box('why','Шешуі',steps));c.append(box('ok','✓ Жауабы',m[1]+(rest?'<div class="anote">'+rest.replace(/^<br>/,'')+'</div>':'')))}
     }
@@ -1622,6 +1723,409 @@ function renderProblems(panel,m){
   panel.append(list)}
 
 /* ---------- router ---------- */
+MODS.t06.intro='Конспект «Сабаққа дайындалу үшін сұрақтардың» 9 сұрағына толық жауап ретінде құрылған: анықтамалар, формулалар, суреттер және медицинадағы мәні (оқулық: 8-тақырып, 127–138 беттер).';
+MODS.t06.notes=(()=>{
+const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`;
+const fig=(svg,cap)=>`<figure class="fig"><svg viewBox="${svg[0]}" role="img" aria-label="${cap}">${svg[1]}</svg><figcaption>${cap}</figcaption></figure>`;
+/* дифильді молекула: бас (шеңбер) + құйрық (сызық) */
+const TR=(v,d,b=0)=>`<animateTransform attributeName="transform" type="translate" values="${v}" dur="${d}s" begin="${b}s" repeatCount="indefinite"/>`;
+const RO=(v,d,b=0)=>`<animateTransform attributeName="transform" type="rotate" values="${v}" dur="${d}s" begin="${b}s" repeatCount="indefinite"/>`;
+const AN=(attr,v,d,b=0)=>`<animate attributeName="${attr}" values="${v}" dur="${d}s" begin="${b}s" repeatCount="indefinite"/>`;
+const jig=(i)=>TR(`0,0;${(i%3)*3-3},${((i+1)%3)*3-3};${3-(i%3)*3},2;0,0`,1.2+(i%5)*.25,-(i%7)*.3);
+const drawC=(d,cls,dur=4,b=0)=>`<path d="${d}" class="${cls}" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100">${AN('stroke-dashoffset','100;0;0;100',dur,b)}</path>`;
+const swayMol=(x,y,ang,len,i)=>`<g>${mol(x,y,ang,len)}${RO(`${-5+(i%3)} ${x} ${y};${5-(i%3)} ${x} ${y};${-5+(i%3)} ${x} ${y}`,1.6+(i%4)*.3,-(i%5)*.4)}</g>`;
+const mol=(x,y,ang,len=26)=>{const r=ang*Math.PI/180,x2=x+len*Math.cos(r),y2=y+len*Math.sin(r);return `<line x1="${x}" y1="${y}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="tail"/><circle cx="${x}" cy="${y}" r="6" class="head"/>`};
+return [
+{n:1,short:'Адсорбция, десорбция, хемосорбция',h:'Беттік құбылыстар: адсорбция, десорбция, беттік активтілік, адсорбциялық тепе-теңдік, хемосорбция',body:`
+<p><b>Беттік құбылыстар</b> — фазалардың бөліну бетінде (жанасу қабатында) жүретін, беттік қабаттың ерекше құрамы мен құрылысына байланысты процестер. Ағзада олар жасуша мембраналарында, ферменттердің белсенді орталықтарында, өкпеде (газ алмасу), ішекте (сіңіру) үздіксіз жүреді.</p>
+<h3>Неліктен бетте ерекше энергия бар?</h3>
+<p>Сұйықтың ішіндегі молекулаға жан-жақтан бірдей күш әсер етеді, тең әсерлі күш нөлге тең. Ал бетіндегі молекуланы тек төмен және жан-жаққа көрші молекулалар тартады, сондықтан ол сұйықтың ішіне қарай тартылады. Осы теңгерілмеген күштер <b>беттік энергияны</b> тудырады.</p>
+${fig(['0 0 360 190',`<rect x="10" y="60" width="340" height="120" class="liq"/><line x1="10" y1="60" x2="350" y2="60" class="edge"/>
+<text x="20" y="40" class="t2">ауа (газ)</text><text x="20" y="172" class="t2">сұйық</text>
+${[[40,110],[80,150],[150,120],[190,165],[300,105],[330,160],[60,90],[200,95]].map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" class="f-l">${TR(`0,0;${(i%3)*3-3},${(i%2)*4-2};0,0`,1.4+(i%4)*.3,-i*.2)}</circle>`).join('')}<circle cx="250" cy="130" r="9" class="f-b">${TR('0,0;2,-1;-1,2;0,0',.9)}</circle>${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${250+12*Math.cos(r)}" y1="${130+12*Math.sin(r)}" x2="${250+30*Math.cos(r)}" y2="${130+30*Math.sin(r)}" class="arr"/>`}).join('')}
+<text x="215" y="185" class="t3">ішкі молекула: F = 0</text>
+<circle cx="100" cy="68" r="9" class="f-a"/>${[0,45,90,135,180].map(a=>{const r=a*Math.PI/180;return `<line x1="${100+12*Math.cos(r)}" y1="${68+12*Math.sin(r)}" x2="${100+30*Math.cos(r)}" y2="${68+30*Math.sin(r)}" class="arr"/>`}).join('')}
+<line x1="100" y1="80" x2="100" y2="128" class="arr-a">${AN('y2','100;132;100',1.4)}</line><text x="112" y="125" class="t3a">F ≠ 0, ішке тартылады</text>`],'1-сурет. Беттегі және ішкі молекулаға әсер ететін күштер')}
+<ul>
+<li><b>Меншікті бет</b> S<sub>мен</sub> = S<sub>қос</sub>/V — фазаның жалпы бетінің оның көлеміне қатынасы. Зат ұсақталған сайын (жоғары дисперсті жүйелерде) ол күрт артады.</li>
+<li><b>Беттік керілу σ</b> — бет бірлігін түзуге жұмсалатын жұмыс (Дж/м${S(2)}), немесе бетті қысқартуға ұмтылатын күш (Н/м). <b>Беттік энергия</b> E<sub>s</sub> = σ·S. Жүйе әрқашан E<sub>s</sub>-ті азайтуға ұмтылады: не бетті кішірейтеді (тамшы шар пішінді), не σ-ны төмендетеді (адсорбция).</li>
+</ul>
+<h3>Негізгі ұғымдар</h3>
+${T(['Ұғым','Анықтамасы'],[
+['Адсорбция','Еріген зат (газ) концентрациясының фазалардың бөліну бетінде өздігінен өзгеруі (бетте жиналуы)'],
+['Десорбция','Адсорбцияға кері процесс: адсорбцияланған молекулалардың беттен кетуі'],
+['Адсорбент','Бетінде адсорбция жүретін зат (көмір, силикагель, мембрана)'],
+['Адсорбтив (адсорбат)','Адсорбцияланатын (бетке жиналатын) зат'],
+['Беттік активтілік g','g = −dσ/dC (Дж·м/моль) — еріген заттың ерітіндінің беттік керілуін өзгерту қабілеті'],
+['Адсорбциялық тепе-теңдік','Адсорбция мен десорбция жылдамдықтары теңескен динамикалық күй: v<sub>адс</sub> = v<sub>дес</sub>'],
+['Абсорбция','Заттың бүкіл көлем бойынша сіңірілуі (адсорбциядан айырмашылығы — тек бетте емес)'],
+['Сорбция','Адсорбция, абсорбция және капиллярлық конденсацияны біріктіретін жалпы атау']])}
+${fig(['0 0 360 150',`<text x="80" y="18" class="t1" text-anchor="middle">Адсорбция (бетте)</text><text x="270" y="18" class="t1" text-anchor="middle">Абсорбция (көлемде)</text>
+<rect x="20" y="70" width="120" height="70" class="solid"/><rect x="210" y="70" width="120" height="70" class="solid"/>
+${[30,48,66,84,102,120].map(x=>`<circle cx="${x+5}" cy="64" r="5" class="f-a"/>`).join('')}
+${[[40,40],[90,35],[120,45],[70,25]].map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" class="f-a">${TR(`0,0;0,${54-p[1]};0,${54-p[1]};0,0`,3,-i*.75)}${AN('opacity','1;1;.35;1',3,-i*.75)}</circle>`).join('')}
+${[[225,85],[260,100],[300,90],[240,125],[285,125],[315,115],[270,80]].map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" class="f-a">${jig(i)}</circle>`).join('')}
+${[[250,40],[300,35]].map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" class="f-a">${TR(`0,0;${i?-20:15},60;${i?-35:25},85;0,0`,4,-i*2)}</circle>`).join('')}`],'2-сурет. Адсорбция мен абсорбцияның айырмашылығы')}
+<h3>Физикалық адсорбция және хемосорбция</h3>
+${T(['Белгі','Физикалық адсорбция','Хемосорбция (химиялық адсорбция)'],[
+['Күштер','Ван-дер-Ваальс күштері (әлсіз)','Химиялық байланыс (жаңа беттік қосылыс түзіледі)'],
+['Қайтымдылығы','Қайтымды','Көбіне қайтымсыз'],
+['Талғамдылығы','Спецификалық емес','Талғамды (спецификалық)'],
+['Температура артқанда','Әлсірейді','Күшейеді'],
+['Жылу эффектісі (оқулық бойынша)','Жылу бөле жүреді, ΔH &lt; 0','Жылу сіңіре жүреді, ΔH &gt; 0'],
+['Қабат','Көп қабатты болуы мүмкін','Тек бір қабат (мономолекулалы)'],
+['Мысал','Активтелген көмірдің газдарды, иісті жұтуы','H'+B(2)+'-нің Ni бетінде атомдарға ыдырап байланысуы; O'+B(2)+'-нің металда оксид түзуі']])}
+<p class="note">Медицинада: <b>энтеросорбция</b> (активтелген көмір, смекта) — ішектен токсиндерді физикалық адсорбциямен байланыстырады; <b>гемосорбция</b> — қанды сорбенттен өткізіп тазарту.</p>`},
+
+{n:2,short:'Гиббс теңдеуі, мембраналар',h:'Фазалардың жылжымалы бөліну бетіндегі адсорбция. Гиббс теңдеуі. БАЗ молекулаларының бағытталуы. Биологиялық мембраналар құрылымы',body:`
+<p><b>Жылжымалы бөліну беті</b> — сұйық–газ (су–ауа) және сұйық–сұйық (су–май) шекаралары. Мұнда адсорбцияны тікелей өлшеу қиын, сондықтан оны <b>беттік керілудің өзгерісі</b> арқылы есептейді.</p>
+<h3>Гиббс теңдеуі</h3>
+<span class="fx">Г = −${F('C','RT')} · ${F('dσ','dC')} ≈ −${F('C','RT')} · ${F('σ'+B(2)+' − σ'+B(1),'C'+B(2)+' − C'+B(1))} = ${F('C · g','RT')}</span>
+<ul><li>Г — адсорбция (артық беттік концентрация), моль/м${S(2)};</li><li>C — еріген заттың молярлық концентрациясы, моль/л;</li><li>R = 8,314 Дж/(моль·К), T — температура, К;</li><li>−dσ/dC = g — беттік активтілік.</li></ul>
+<p><b>Теңдеудің мәні:</b> егер зат σ-ны төмендетсе (dσ/dC &lt; 0, g &gt; 0), онда Г &gt; 0 — зат бетке жиналады (<b>оң адсорбция</b>, БАЗ). Егер σ-ны жоғарылатса (dσ/dC &gt; 0), Г &lt; 0 — зат беттен ығысады (<b>теріс адсорбция</b>, БИЗ).</p>
+<h3>Беттік қабатта БАЗ молекулаларының бағытталуы</h3>
+<p>БАЗ молекуласы <b>дифильді</b>: полярлы гидрофильді «бас» (–OH, –COOH, –COO${S('−')}, –SO${B(3)}${S('−')}, –NH${B(2)}) және полярсыз гидрофобты көмірсутек «құйрық». Су–ауа шекарасында басы суға, құйрығы ауаға қарайды. Концентрация аз болғанда молекулалар бетте «жатып» орналасады, ал бет қаныққанда бір-біріне параллель, тік «тұрады» — <b>Ленгмюр тұрағы (частоколы)</b> түзіледі.</p>
+${fig(['0 0 360 170',`<rect x="10" y="80" width="340" height="80" class="liq"/><line x1="10" y1="80" x2="350" y2="80" class="edge"/>
+<text x="20" y="22" class="t2">ауа (полярсыз)</text><text x="20" y="152" class="t2">су (полярлы)</text>
+<text x="85" y="40" class="t3" text-anchor="middle">аз C: жатып орналасу</text>
+<g>${mol(40,80,-15,28)}${TR('0,0;14,0;0,0',5)}</g><g>${mol(95,80,-165,28)}${TR('0,0;-10,0;0,0',4.2)}</g><g>${mol(130,80,-20,28)}${TR('0,0;12,0;0,0',4.6)}</g><g>${mol(150,140,-60,24)}${TR('0,0;20,-25;40,-58;40,-58;0,0',5)}${AN('opacity','1;1;0;0;1',5)}</g>
+<text x="265" y="40" class="t3" text-anchor="middle">қаныққан бет: Ленгмюр тұрағы</text>
+${[200,215,230,245,260,275,290,305,320].map((x,i)=>swayMol(x,82,-90,30,i)).join('')}
+<circle cx="40" cy="185" r="0"/>`],'3-сурет. Су–ауа шекарасында БАЗ молекулаларының бағытталуы (● — полярлы бас, │ — көмірсутек құйрық)')}
+<h3>Биологиялық мембраналар құрылымы</h3>
+<p><b>Биологиялық мембрана</b> — жасушаны және оның органоидтарын қоршайтын, сұйық кристалдық күйдегі жұқа (≈ 7–10 нм) құрылым. Негізгі құрамы — <b>липидтер</b> (фосфолипидтер, сфингомиелин, холестерол), <b>ақуыздар</b> және көмірсулар (гликолипидтер, гликопротеидтер).</p>
+<ul>
+<li><b>Даниэль–Давсон моделі:</b> мембрана негізі — липидтердің <b>қос қабаты</b>: полярлы бастары сыртқа (суға), полярсыз құйрықтары ішке қарай бағытталған; екі жағынан ақуыз қабатымен жабылған.</li>
+<li><b>Сұйық-мозаикалық модель (қазіргі):</b> ақуыздар липид қос қабатына асимметриялы түрде батырылған — сыртқы (перифериялық) және тесіп өтетін (интегралды) ақуыздар; олар ион арналары мен тасымалдаушылар түзеді; липидтер мен ақуыздар қабат бойымен жылжи алады.</li>
+</ul>
+${fig(['0 0 360 200',`<rect x="10" y="10" width="340" height="40" class="liq"/><rect x="10" y="150" width="340" height="40" class="liq"/>
+<text x="20" y="30" class="t2">жасушадан тыс орта (су)</text><text x="20" y="182" class="t2">цитоплазма (су)</text>
+${Array.from({length:15},(_,i)=>20+i*22).filter(x=>x<140||x>220).map((x,i)=>swayMol(x,62,90,37,i)+swayMol(x,138,-90,37,i+2)).join('')}
+<rect x="150" y="48" width="58" height="104" rx="20" class="prot"/><rect x="172" y="48" width="14" height="104" class="chan"/><circle cx="179" cy="20" r="7" class="f-a">${AN('cy','15;15;100;185;185',4)}${AN('opacity','0;1;1;1;0',4)}</circle><text x="179" y="104" class="t3w" text-anchor="middle">ақуыз</text>
+<g>${TR('0,0;-30,0;0,0',8)}<ellipse cx="300" cy="50" rx="26" ry="12" class="prot2"/><text x="300" y="54" class="t3w" text-anchor="middle">перифер.</text></g>
+<text x="352" y="104" class="t3" text-anchor="end"> </text>`],'4-сурет. Сұйық-мозаикалық мембрана: липидтердің қос қабаты және ақуыздар')}
+<p><b>Мембрананың қызметтері:</b> жасуша ішіндегісін сыртқы ортадан бөлу; ішкі құрамның тұрақтылығын қамтамасыз ету; заттардың талғамды өтуі (глюкоза, аминқышқылдары, иондар); рецепторлық, ферменттік қызмет.</p>`},
+
+{n:3,short:'Изотермалар, оң/теріс адсорбция',h:'Беттік керілу изотермасы. Адсорбция изотермасы. Оң және теріс адсорбция. Адсорбцияның молекула құрылысына тәуелділігі',body:`
+<ul><li><b>Беттік керілу изотермасы</b> — тұрақты температурада ерітіндінің беттік керілуінің еріген заттың тепе-теңдік концентрациясына тәуелділігінің графигі: σ = f(C).</li>
+<li><b>Адсорбция изотермасы</b> — тұрақты температурада адсорбция шамасының еріген заттың (газдың) тепе-теңдік концентрациясына (қысымына) тәуелділігінің графигі: Г = f(C).</li></ul>
+${fig(['0 0 360 190',`<line x1="40" y1="15" x2="40" y2="160" class="ax"/><line x1="40" y1="160" x2="170" y2="160" class="ax"/><text x="22" y="22" class="t2">σ</text><text x="160" y="178" class="t2">C</text><text x="105" y="12" class="t1" text-anchor="middle">а) σ = f(C)</text>
+${drawC('M40 90 C80 60 120 45 165 35','c-r',5)}${drawC('M40 90 L165 90','c-g',5)}${drawC('M40 90 C70 120 110 138 165 145','c-b',5)}
+<text x="120" y="32" class="t3r">БИЗ</text><text x="125" y="84" class="t3g">БАЕЗ</text><text x="120" y="132" class="t3b">БАЗ</text><text x="44" y="86" class="t3">σ₀</text>
+<line x1="210" y1="15" x2="210" y2="160" class="ax"/><line x1="210" y1="160" x2="350" y2="160" class="ax"/><text x="192" y="22" class="t2">Г</text><text x="340" y="178" class="t2">C</text><text x="280" y="12" class="t1" text-anchor="middle">ә) Г = f(C), БАЗ</text>
+${drawC('M210 160 C235 80 275 55 345 50','c-b',5)}<circle r="5" class="f-a"><animateMotion dur="5s" repeatCount="indefinite" keyPoints="0;1;1;0" keyTimes="0;.45;.55;1" calcMode="linear" path="M210 160 C235 80 275 55 345 50"/></circle><line x1="210" y1="45" x2="345" y2="45" class="dash"/><text x="300" y="40" class="t3">Г∞</text>`],'5-сурет. а) Беттік керілу изотермалары (БАЗ, БИЗ, БАЕЗ); ә) БАЗ адсорбция изотермасы — Г шекті мәнге Г∞ ұмтылады')}
+<div class="lab" data-lab="shish"><div class="lab-h">🧪 Зертхана: Шишковский және Гиббс теңдеулері</div><p class="lab-p">Спирттің тізбегін, B тұрақтысын, температура мен концентрацияны өзгертіңіз: беттік керілу изотермасы, адсорбция изотермасы және есептеулер бірден қайта есептеледі. Сұр қисық — салыстыру үшін пропанол.</p><div class="lab-ins"><label class="lab-in"><span>Спирт: <b data-v="n"></b></span><input type="range" name="n" min="3" max="8" step="1" value="4"></label><label class="lab-in"><span>B, мН/м: <b data-v="B"></b></span><input type="range" name="B" min="5" max="20" step="0.5" value="12.5"></label><label class="lab-in"><span>C, моль/л: <b data-v="C"></b></span><input type="range" name="C" min="0.005" max="0.5" step="0.005" value="0.1"></label><label class="lab-in"><span>T: <b data-v="T"></b></span><input type="range" name="T" min="273" max="333" step="1" value="298"></label></div><div class="lab-plots"><svg class="lp1"></svg><svg class="lp2"></svg></div><div class="lab-out"></div></div><h3>Оң және теріс адсорбция</h3>
+${T(['Белгі','Оң адсорбция','Теріс адсорбция'],[
+['Бетте концентрация','Көлемдегіден көп — зат бетке жиналады','Көлемдегіден аз — зат беттен көлемге ығысады'],
+['Г','Г &gt; 0','Г &lt; 0'],['σ','σ &lt; σ'+B(0)+' (кемиді)','σ &gt; σ'+B(0)+' (артады)'],['g = −dσ/dC','g &gt; 0','g &lt; 0'],
+['Заттар','Беттік активті заттар (БАЗ): спирттер, карбон қышқылдары, сабындар, ақуыздар, өт қышқылдары','Беттік инактивті заттар (БИЗ): NaCl, Na'+B(2)+'SO'+B(4)+', бейорганикалық қышқылдар, негіздер, глицерин, α-аминқышқылдары']])}
+<p><b>Беттік активті емес заттар (БАЕЗ)</b> — қант, глюкоза: σ = σ${B(0)}, g ≈ 0, Г = 0.</p>
+<p><b>Себебі:</b> БИЗ иондары сумен күшті гидратацияланады, су молекулалары оларды көлемге тартады, сондықтан бетте олардың концентрациясы аз. БАЗ-дың гидрофобты құйрығы суға «ыңғайсыз», сондықтан молекула бетке ығысады.</p>
+<h3>Адсорбцияның молекула құрылысына тәуелділігі</h3>
+<p>Адсорбция гидрофильді және гидрофобты бөліктердің арақатынасына байланысты. <b>Дюкло–Траубе ережесі:</b> гомологтық қатарда көмірсутек тізбегі бір –CH${B(2)}– тобына ұзарған сайын беттік активтілік (сұйылтылған ерітінділерде, бөлме температурасында) орташа <b>3–3,5 есе</b> артады.</p>
+<span class="fx">${F('g'+B('n+1'),'g'+B('n'))} ≈ 3–3,5</span>
+${fig(['0 0 360 120',`${[['HCOOH',1],['CH₃COOH',2],['C₂H₅COOH',3],['C₃H₇COOH',4]].map((m,i)=>{const x=30+i*85;return `<circle cx="${x}" cy="90" r="8" class="head"/><line x1="${x}" y1="82" x2="${x}" y2="${82-m[1]*14}" class="tail">${AN('y2',`82;${82-m[1]*14};${82-m[1]*14};82`,4,i*.3)}</line><text x="${x}" y="114" class="t3" text-anchor="middle">${m[0]}</text>`}).join('')}
+<line x1="10" y1="20" x2="340" y2="20" class="arr-a"/><text x="175" y="14" class="t3a" text-anchor="middle">тізбек ұзарады → беттік активтілік 3–3,5 есе артады</text>`],'6-сурет. Дюкло–Траубе ережесі: құмырсқа → сірке → пропион → май қышқылы')}`},
+
+{n:4,short:'Ленгмюр теориясы',h:'Қатты адсорбенттің бетіндегі адсорбция. Адсорбцияның сандық сипаттамасы. Ленгмюр теориясы мен теңдеуі',body:`
+<p><b>Қатты адсорбенттер:</b> сыртқы беті дамыған кеуексіз (оксидтер, тұздар, графит күйесі) және ішкі беті үлкен кеуекті (активтелген көмір, силикагель, алюмогельдер). Адсорбция — газдың, будың немесе еріген заттың қатты дененің бетінде жиналуы.</p>
+<h3>Адсорбция мәнінің сандық сипаттамасы</h3>
+${T(['Шама','Формула','Бірлігі'],[
+['Абсолюттік адсорбция a','Адсорбент массасына (бетіне) келетін адсорбат мөлшері: a = x/m','моль/кг, моль/г'],
+['Гиббстік (артық) адсорбция Г','Беттік қабаттағы адсорбаттың көлемдегіден артық мөлшері','моль/м'+S(2)],
+['Ерітіндіден адсорбция','Г = '+F('(C'+B(0)+' − C)·V','m'),'моль/кг']])}
+<h3>Ленгмюр теориясының негізгі қағидалары</h3>
+<ol><li>Адсорбция адсорбент бетінің барлық жерінде емес, тек <b>белсенді орталықтарында</b> (бос валенттілігі бар жерлерде) жүреді.</li>
+<li>Әр белсенді орталық тек <b>бір молекуланы</b> ұстайды → нәтижесінде <b>мономолекулалы қабат</b> түзіледі.</li>
+<li>Белсенді орталықтар энергиясы жағынан бірдей (тең).</li>
+<li>Адсорбцияланған молекулалар бір-бірімен әрекеттеспейді.</li>
+<li>Адсорбцияланған молекулалар бос молекулалармен <b>динамикалық тепе-теңдікте</b> болады.</li></ol>
+${fig(['0 0 360 120',`<rect x="10" y="70" width="340" height="40" class="solid"/><text x="180" y="96" class="t3w" text-anchor="middle">адсорбент</text>
+${Array.from({length:14},(_,i)=>20+i*24).map((x,i)=>`<path d="M${x-6} 70 L${x} 62 L${x+6} 70" class="site"/>`+`<circle cx="${x}" cy="54" r="7" class="f-a">${i%3===2?TR('0,-40;0,0;0,0;0,-40',3+i%4*.5,-i*.4)+AN('opacity','.3;1;1;.3',3+i%4*.5,-i*.4):TR('0,0;0,-2;0,0',1.5,-i*.2)}</circle>`).join('')}
+${[[60,20],[150,28],[250,18],[310,30]].map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="7" class="f-a">${TR(`0,0;${i%2?12:-12},6;0,0`,2.5+i*.4)}</circle>`).join('')}
+<text x="350" y="12" class="t3" text-anchor="end">газ/ерітінді молекулалары</text>`],'7-сурет. Ленгмюр бойынша мономолекулалы адсорбция: әр белсенді орталықта (▲) бір молекула')}
+<h3>Ленгмюр теңдеуі</h3>
+<span class="fx">Г = Г${B('∞')} · ${F('C','K + C')} &nbsp;(газ үшін: Г = Г${B('∞')} · ${F('P','K + P')})</span>
+<ul><li>Г — адсорбция шамасы; Г${B('∞')} — шекті адсорбция (бет толық қаныққанда, мономолекулалы қабат);</li><li>K — десорбция мен адсорбция жылдамдық тұрақтыларының қатынасы;</li><li>C (P) — тепе-теңдік концентрация (қысым).</li></ul>
+<h3>Теңдеуді талдау (изотерманың 3 аймағы)</h3>
+${fig(['0 0 360 190',`<line x1="40" y1="15" x2="40" y2="160" class="ax"/><line x1="40" y1="160" x2="350" y2="160" class="ax"/><text x="22" y="22" class="t2">Г</text><text x="340" y="178" class="t2">C</text>
+<line x1="40" y1="45" x2="345" y2="45" class="dash"/><text x="325" y="40" class="t3">Г∞</text>
+${drawC('M40 160 C70 90 120 62 200 52 S330 47 345 46','c-b',6)}<circle r="6" class="f-a"><animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;1;1;0" keyTimes="0;.45;.55;1" calcMode="linear" path="M40 160 C70 90 120 62 200 52 S330 47 345 46"/></circle>
+<line x1="95" y1="20" x2="95" y2="160" class="dash2"/><line x1="230" y1="20" x2="230" y2="160" class="dash2"/>
+<text x="67" y="150" class="t3a" text-anchor="middle">I</text><text x="162" y="150" class="t3a" text-anchor="middle">II</text><text x="290" y="150" class="t3a" text-anchor="middle">III</text>`],'8-сурет. Ленгмюр изотермасы: I — Генри аймағы (түзу), II — қисық, III — қаныққан аймақ')}
+<div class="lab" data-lab="lang"><div class="lab-h">🧪 Зертхана: Ленгмюр теңдеуі</div><p class="lab-p">Г∞, K және C мәндерін енгізіңіз. Көк қисық — Ленгмюр изотермасы, жасыл түзу — Генри заңы (тек аз C-да сәйкес келеді), тік үзік сызық — C = K (бет жартылай толған нүкте). Бастапқы мәндер — тәжірибелік тапсырмадағы гемосорбция есебі.</p><div class="lab-ins"><label class="lab-in"><span>Г∞, ·10⁻³ моль/г: <b data-v="Gi"></b></span><input type="range" name="Gi" min="0.5" max="6" step="0.1" value="3"></label><label class="lab-in"><span>K, моль/л: <b data-v="K"></b></span><input type="range" name="K" min="0.01" max="0.5" step="0.01" value="0.06"></label><label class="lab-in"><span>C, моль/л: <b data-v="C"></b></span><input type="range" name="C" min="0.001" max="3" step="0.001" value="0.2"></label></div><div class="lab-plots one"><svg class="lp1"></svg></div><div class="lab-out"></div></div><ul><li><b>I. Аз концентрацияда</b> (C ≪ K): Г ≈ Г${B('∞')}·C/K — адсорбция концентрацияға тура пропорционал (Генри заңы).</li>
+<li><b>II. Орташа концентрацияда</b> — изотерма қисық (теңдеудің толық түрі).</li>
+<li><b>III. Үлкен концентрацияда</b> (C ≫ K): Г ≈ Г${B('∞')} — бет толық қаныққан, адсорбция концентрацияға тәуелсіз.</li></ul>
+<p><b>Қолданылуы:</b> концентрацияның кең интервалында, жылжымалы (с/г, с/с) және жылжымайтын (қ/г, қ/с) бөліну беттерінде.</p>
+<h3>Фрейндлих теңдеуі (эмпирикалық)</h3>
+<span class="fx">a = ${F('x','m')} = K·C${S('1/n')} &nbsp;→&nbsp; lg a = lg K + ${F('1','n')}·lg C</span>
+<p>Тұрақтыларды табу: lg a — lg C графигі түзу; ординатадан кесетін кесінді = lg K, түзудің көлбеу тангенсі = 1/n. Орташа концентрацияда, бөлме температурасында қолданылады.</p>
+<div class="lab" data-lab="freund"><div class="lab-h">🧪 Зертхана: Фрейндлих теңдеуі</div><p class="lab-p">K мен 1/n өзгергенде қисық (сол жақта) және оның логарифмдік түзуі (оң жақта) қалай өзгеретінін бақылаңыз: түзудің көлбеулігі 1/n-ге, кесіндісі lg K-ға тең.</p><div class="lab-ins"><label class="lab-in"><span>K: <b data-v="K"></b></span><input type="range" name="K" min="0.1" max="2" step="0.05" value="1"></label><label class="lab-in"><span>1/n: <b data-v="n1"></b></span><input type="range" name="n1" min="0.1" max="1" step="0.05" value="0.5"></label><label class="lab-in"><span>C, моль/л: <b data-v="C"></b></span><input type="range" name="C" min="0.01" max="1" step="0.01" value="0.3"></label></div><div class="lab-plots"><svg class="lp1"></svg><svg class="lp2"></svg></div><div class="lab-out"></div></div><p><b>БЭТ теориясы (Брунауэр, Эммет, Теллер)</b> — полимолекулалы адсорбция: бірінші қабаттың үстіне келесі қабаттар түзіледі, изотерма S-тәрізді болады.</p>`},
+
+{n:5,short:'Иондардың таңдамалы адсорбциясы',h:'Тұнба бетінде иондардың таңдамалы адсорбциясы. Адсорбцияға қабілеттілік ион зарядына тәуелді ме?',body:`
+<p>Күшті электролиттер ерітіндіде толық иондалған, сондықтан олардың адсорбциясы <b>ион түрінде</b> жүреді (<b>ионды адсорбция</b>). Иондар негізінен полярлы адсорбенттерде — иондық кристалдардың (тұнбалардың) бетінде адсорбцияланады. Адсорбцияланған ион бетке заряд береді, оған қарама-қарсы зарядты иондар тартылып, <b>қос электр қабаты</b> түзіледі.</p>
+<h3>Панет–Фаянс ережесі</h3>
+<p>Кристалл бетінде алдымен оның <b>құрамына кіретін</b> немесе онымен изоморфты, яғни <b>кристалл торын жалғастырып, жетілдіре алатын</b> иондар адсорбцияланады. Бұл — <b>талғамды (таңдамалы) адсорбция</b>.</p>
+${fig(['0 0 450 200',`<rect x="60" y="50" width="240" height="120" class="solid"/>
+${Array.from({length:5},(_,r)=>Array.from({length:9},(_,c)=>{const x=80+c*25,y=68+r*22,ag=(r+c)%2===0;return `<circle cx="${x}" cy="${y}" r="8" class="${ag?'f-b':'f-o'}"/><text x="${x}" y="${y+3}" class="t4" text-anchor="middle">${ag?'Ag':'I'}</text>`}).join('')).join('')}
+${Array.from({length:9},(_,c)=>`<g>${TR('0,-30;0,0;0,0;0,-30',4,-c*.35)}${AN('opacity','0;1;1;0',4,-c*.35)}<circle cx="${80+c*25}" cy="40" r="8" class="f-b"/><text x="${80+c*25}" y="43" class="t4" text-anchor="middle">Ag⁺</text></g>`).join('')}
+${Array.from({length:6},(_,c)=>`<g>${TR(`0,0;${c%2?6:-6},3;0,0`,2+c*.2)}<circle cx="${95+c*36}" cy="14" r="7" class="f-r"/><text x="${95+c*36}" y="17" class="t4" text-anchor="middle">−</text></g>`).join('')}
+<text x="310" y="44" class="t3">потенциал анықтаушы иондар</text><text x="310" y="18" class="t3">қарсы иондар (NO₃⁻)</text><text x="180" y="190" class="t3" text-anchor="middle">AgI кристалы (артық AgNO₃ ерітіндісінде)</text>`],'9-сурет. Панет–Фаянс ережесі: AgI бетінде торды жалғастыратын Ag⁺ иондары адсорбцияланады')}
+${T(['Кристалл','Торды жетілдіретін иондар','Мысал'],[
+['AgCl, AgI','Ag'+S('+')+', Cl'+S('−')+' (I'+S('−')+', Br'+S('−')+')','Артық AgNO'+B(3)+' → Ag'+S('+')+' адсорбцияланады (бет «+»); артық KI → I'+S('−')+' (бет «−»)'],
+['BaSO'+B(4),'Ba'+S('2+')+', SO'+B(4)+S('2−'),'Артық BaCl'+B(2)+' → Ba'+S('2+')],
+['Ca'+B(3)+'(PO'+B(4)+')'+B(2),'Ca'+S('2+')+', PO'+B(4)+S('3−')+' (HPO'+B(4)+S('2−')+')','Сүйек тінінде Ca'+S('2+')+' орнына Sr'+S('2+')+' (⁹⁰Sr) енуі — осы ереже бойынша']])}
+<h3>Адсорбция ион зарядына тәуелді ме? — <u>Иә</u></h3>
+<ul><li><b>Заряд</b> көп болған сайын адсорбция күштірек: Na${S('+')} &lt; Ca${S('2+')} &lt; Al${S('3+')} &lt; Th${S('4+')}.</li>
+<li>Бірдей зарядты иондарда — <b>радиусы</b> үлкен (гидратталған радиусы кіші) ион күштірек адсорбцияланады. Бұл <b>лиотроптық қатарлар</b> (Гофмейстер қатарлары):</li></ul>
+<span class="fx">Li${S('+')} &lt; Na${S('+')} &lt; K${S('+')} &lt; Rb${S('+')} &lt; Cs${S('+')} &nbsp;&nbsp;|&nbsp;&nbsp; Cl${S('−')} &lt; Br${S('−')} &lt; NO${B(3)}${S('−')} &lt; I${S('−')} &lt; CNS${S('−')}</span>
+<p>Себебі: ион радиусы кіші болса, оның гидрат қабығы қалың (Li${S('+')} ең күшті гидратацияланады), ол бетке жақындай алмайды.</p>
+<ul><li><b>Эквивалентті адсорбция</b> — бетте катиондар мен аниондар эквивалентті мөлшерде адсорбцияланады.</li><li><b>Ион алмасу адсорбциясы</b> — адсорбент пен ерітінді арасында бірдей зарядталған иондардың эквивалентті алмасуы (8-сұрақ).</li></ul>`},
+
+{n:6,short:'Ерітіндіден адсорбция, Ребиндер',h:'Ерітіндіден адсорбцияның негізгі заңдылықтары. Дифильді молекулалардың полярлы және полярсыз адсорбенттердегі адсорбциясы',body:`
+<p><b>Молекулалық адсорбция</b> — бейэлектролиттер немесе әлсіз электролиттер ерітінділерінен молекула түрінде жүретін адсорбция. Ерітіндіде адсорбентке еріген зат пен <b>еріткіш бәсекелеседі</b>, сондықтан адсорбция газдағыдан күрделірек.</p>
+<span class="fx">Г = ${F('(C'+B(0)+' − C)·V','m')}</span>
+<p>C${B(0)} — бастапқы концентрация, C — тепе-теңдік концентрация (моль/л), V — ерітінді көлемі (л), m — адсорбент массасы (кг).</p>
+<h3>Ерітіндіден адсорбцияға әсер ететін факторлар</h3>
+<ul><li>адсорбент пен адсорбаттың табиғаты (полярлығы);</li><li>еріткіштің табиғаты (адсорбат еріткіште жақсы ерісе, адсорбция аз);</li><li>адсорбат концентрациясы;</li><li>температура (артса, адсорбция кемиді);</li><li>адсорбенттің меншікті беті мен кеуектілігі.</li></ul>
+<h3>Ребиндердің полярлықты теңестіру ережесі</h3>
+<p>Адсорбция фазалардың <b>полярлығын теңестіру</b> бағытында жүреді және полярлықтардың айырмашылығы үлкен болған сайын күштірек болады. БАЗ екі фазаның арасында «көпір» болып орналасады: полярлы басы — полярлы фазаға, полярсыз құйрығы — полярсыз фазаға.</p>
+${fig(['0 0 360 200',`<text x="90" y="14" class="t1" text-anchor="middle">а) полярлы адсорбент</text><text x="270" y="14" class="t1" text-anchor="middle">ә) полярсыз адсорбент</text>
+<rect x="15" y="150" width="150" height="38" class="solid"/><text x="90" y="174" class="t3w" text-anchor="middle">силикагель (полярлы)</text><text x="90" y="40" class="t3" text-anchor="middle">еріткіш: бензол (полярсыз)</text>
+${[30,50,70,90,110,130,150].map((x,i)=>`<g>${TR('0,-70;0,0;0,0;0,-70',5,-i*.5)}${AN('opacity','0;1;1;0',5,-i*.5)}${mol(x,143,-90,34)}</g>`).join('')}
+<rect x="195" y="150" width="150" height="38" class="solid2"/><text x="270" y="174" class="t3w" text-anchor="middle">көмір (полярсыз)</text><text x="270" y="40" class="t3" text-anchor="middle">еріткіш: су (полярлы)</text>
+${[210,230,250,270,290,310,330].map((x,i)=>`<g>${TR('0,-60;0,0;0,0;0,-60',5,-i*.5)}${AN('opacity','0;1;1;0',5,-i*.5)}${mol(x,110,90,34)}</g>`).join('')}`],'10-сурет. Ребиндер ережесі: а) басы адсорбентке, құйрығы еріткішке; ә) құйрығы адсорбентке, басы суға')}
+${T(['Адсорбент','Еріткіш','БАЗ бағытталуы','Дюкло–Траубе ережесі'],[
+['Полярлы (силикагель, глина)','Полярсыз (бензол, гексан)','Полярлы бас — адсорбентке, құйрық — еріткішке','<b>Кері</b> орындалады: тізбек ұзарған сайын адсорбция кемиді'],
+['Полярсыз (көмір, графит)','Полярлы (су)','Құйрық — адсорбентке, полярлы бас — суға','<b>Тура</b> орындалады: тізбек ұзарған сайын адсорбция артады']])}
+<p class="note">Сондықтан активтелген көмір сулы ортадан органикалық заттарды (токсиндер, алкалоидтар, бояғыштар) жақсы адсорбциялайды — энтеросорбцияның негізі.</p>`},
+
+{n:7,short:'Мицеллалар',h:'Сулы ерітінділерде беттік активті заттар мицелласының құрылысы (гидрофильді мицеллалар)',body:`
+<p>БАЗ концентрациясы аз болғанда молекулалар ерітіндіде жеке-жеке болады және бетке адсорбцияланады. Бет қаныққаннан кейін, белгілі бір концентрацияға жеткенде молекулалар өздігінен топтасып, <b>мицеллалар</b> түзеді. Бұл концентрация <b>мицелла түзілудің критикалық концентрациясы (МТКК, ККМ)</b> деп аталады.</p>
+${fig(['0 0 420 210',`<rect x="5" y="5" width="410" height="200" class="liq"/>
+<g>${RO('0 180 105;360 180 105',30)}${Array.from({length:18},(_,i)=>{const a=i*20*Math.PI/180,x=180+62*Math.cos(a),y=105+62*Math.sin(a);return `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(180+18*Math.cos(a)).toFixed(1)}" y2="${(105+18*Math.sin(a)).toFixed(1)}" class="tail"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" class="head"/>`}).join('')}
+</g><circle cx="180" cy="105" r="22" class="core"><animate attributeName="r" values="22;24;22" dur="3s" repeatCount="indefinite"/></circle><text x="180" y="109" class="t3" text-anchor="middle">ядро</text>
+<text x="20" y="25" class="t2">су</text>
+<line x1="255" y1="60" x2="300" y2="35" class="lead"/><text x="300" y="30" class="t3">гидрофильді бас</text>
+<line x1="200" y1="115" x2="300" y2="175" class="lead"/><text x="280" y="190" class="t3">гидрофобты құйрық</text>
+<g>${TR('0,0;30,-20;10,-60;0,0',8)}${mol(40,170,-60,22)}</g><g>${TR('0,0;20,40;-10,20;0,0',7)}${mol(70,60,200,22)}</g><text x="20" y="200" class="t3">жеке молекулалар</text>`],'11-сурет. Сулы ортадағы БАЗ-дың сфералық (гидрофильді) мицелласы')}
+<h3>Гидрофильді мицелланың құрылысы</h3>
+<ul><li><b>Ядросы</b> — көмірсутек құйрықтарынан тұрады, ішінде сұйық көмірсутек сияқты (гидрофобты, полярсыз);</li>
+<li><b>Сыртқы қабаты</b> — суға бағытталған полярлы гидрофильді топтар (–COO${S('−')}, –SO${B(3)}${S('−')}); олар гидратацияланады, иондық БАЗ-да қарсы иондармен қоршалады;</li>
+<li>Мицелла сфералық (Гартли мицелласы), концентрация артқанда цилиндр, пластинка тәрізді болуы мүмкін;</li>
+<li>Мицеллалар мен жеке молекулалар арасында <b>динамикалық тепе-теңдік</b> бар.</li></ul>
+<p><b>Полярсыз еріткіште</b> керісінше — <b>кері (гидрофобты) мицеллалар</b>: полярлы бастар ішке, құйрықтар сыртқа бағытталады.</p>
+<h3>Солюбилизация және медициналық мәні</h3>
+<p><b>Солюбилизация</b> — суда ерімейтін заттардың (майлар, көмірсутектер, кейбір дәрілер) мицелла ядросына еніп, «еріп» кетуі. Мысалы:</p>
+<ul><li><b>Өт қышқылдарының тұздары</b> ішекте майларды эмульгирлеп, мицелла түзіп, майлар мен майда еритін витаминдердің (A, D, E, K) сіңірілуін қамтамасыз етеді;</li><li>сабындар мен жуғыш заттардың тазартқыш әсері — кірдің мицеллаға енуі;</li><li>майда еритін дәрілердің сулы ерітінділерін алу.</li></ul>`},
+
+{n:8,short:'Ион алмасу, иониттер',h:'Ион алмасу адсорбциясы және оның медицинада қолданылуы',body:`
+<p><b>Ион алмасу адсорбциясы</b> — ерітінді мен адсорбент арасында бірдей зарядталған иондардың эквивалентті мөлшерде алмасу процесі. Адсорбент бір ионды сіңіріп, орнына ерітіндіге басқа ионды береді.</p>
+<p><b>Иониттер</b> — құрамында иондарды алмастыруға қабілетті топтары бар, суда ерімейтін сорбенттер (табиғи: цеолиттер, глиналар; синтетикалық: ион алмастырғыш шайырлар).</p>
+${T(['Ионит түрі','Белгілеу','Алмасатын ион','Иондық топтар'],[
+['Катиониттер','R⁻H'+S('+')+' (R⁻Na'+S('+')+')','Катиондар','Күшті қышқылды: –SO'+B(3)+'H; әлсіз қышқылды: –COOH, –OH'],
+['Аниониттер','R'+S('+')+'OH'+S('−')+' (R'+S('+')+'Cl'+S('−')+')','Аниондар','Күшті негізді: төрттік аммоний –N(CH'+B(3)+')'+B(3)+S('+')+'; әлсіз негізді: –NH'+B(2)+', =NH'],
+['Амфотерлік иониттер','—','Катиондар да, аниондар да','Қышқылдық және негіздік топтар бірге']])}
+<ul><li><b>Алмасу сыйымдылығы</b> — тепе-теңдік жағдайында 1 г құрғақ ионит сіңіретін ион мөлшері (ммоль/г).</li>
+<li><b>Гидролиттік ион алмасу адсорбциясы</b> — адсорбент бейтарап тұздың бір ионын сіңіріп, орнына H${S('+')}  немесе OH${S('−')} беріп, ортаның pH-ын өзгертуі.</li>
+<li><b>Регенерация</b> (қалпына келтіру): катиониттер — қышқыл ерітіндісімен, аниониттер — сілті ерітіндісімен өңделеді.</li></ul>
+<h3>Суды тазарту (тұзсыздандыру) схемасы</h3>
+${fig(['0 0 360 150',`<rect x="10" y="40" width="70" height="50" rx="8" class="box"/><text x="45" y="62" class="t3" text-anchor="middle">су</text><text x="45" y="78" class="t3" text-anchor="middle">Ca²⁺, Cl⁻</text>
+<line x1="80" y1="65" x2="110" y2="65" class="arr-a"/>
+<rect x="110" y="20" width="90" height="90" rx="10" class="col1"/><text x="155" y="55" class="t3w" text-anchor="middle">Катионит</text><text x="155" y="72" class="t3w" text-anchor="middle">R–H⁺</text><text x="155" y="90" class="t4w" text-anchor="middle">Ca²⁺ ұсталады</text>
+<line x1="200" y1="65" x2="225" y2="65" class="arr-a"/><text x="212" y="58" class="t4" text-anchor="middle">H⁺,Cl⁻</text>
+<rect x="225" y="20" width="90" height="90" rx="10" class="col2"/><text x="270" y="55" class="t3w" text-anchor="middle">Анионит</text><text x="270" y="72" class="t3w" text-anchor="middle">R–OH⁻</text><text x="270" y="90" class="t4w" text-anchor="middle">Cl⁻ ұсталады</text>
+<line x1="315" y1="65" x2="345" y2="65" class="arr-a"/>
+<circle r="6" class="f-r"><animateMotion dur="4s" repeatCount="indefinite" path="M45 62 L150 62" keyPoints="0;1;1" keyTimes="0;.5;1" calcMode="linear"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.55;1" dur="4s" repeatCount="indefinite"/></circle>
+<circle r="5" class="f-a"><animateMotion dur="4s" repeatCount="indefinite" path="M45 72 L265 72" keyPoints="0;1;1" keyTimes="0;.6;1" calcMode="linear"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.6;.65;1" dur="4s" repeatCount="indefinite"/></circle>
+<circle r="5" class="f-l2"><animateMotion dur="3s" begin="1s" repeatCount="indefinite" path="M318 65 L352 65" calcMode="linear"/></circle><text x="330" y="125" class="t3" text-anchor="middle">таза су H₂O</text>`],'12-сурет. Суды катионит пен анионит арқылы тұзсыздандыру')}
+<span class="fx">2R–H${S('+')} + Ca${S('2+')} + 2Cl${S('−')} → R${B(2)}Ca + 2H${S('+')} + 2Cl${S('−')}</span>
+<span class="fx">R–OH${S('−')} + H${S('+')} + Cl${S('−')} → R–Cl + H${B(2)}O</span>
+<p>Осылайша су кальций хлориді және басқа тұздардан тазарады (H${S('+')} + OH${S('−')} → H${B(2)}O).</p>
+<h3>Медицина мен фармацияда қолданылуы</h3>
+<ul><li>суды, антибиотиктерді, ақуыздарды, витаминдерді тазарту;</li><li>дәрілік заттарды өсімдіктерден бөліп алу;</li><li><b>қанды консервілеу</b> — Ca${S('2+')} иондарын катионитпен байланыстырып, қанның ұюын болдырмау;</li><li>уланғанда асқазан-ішек жолындағы токсиндерді иониттің жоғары дисперсті формасымен байланыстыру;</li><li>ағзадағы иондық балансты реттеу (мысалы, гиперкалиемияда K${S('+')} байланыстыратын шайырлар);</li><li>асқазанның жоғары қышқылдығында аниониттермен емдеу.</li></ul>`},
+
+{n:9,short:'Хроматография',h:'Хроматография. Әдістердің жіктелуі. Медицина мен санитарлық-гигиенада қолданылуы',body:`
+<p><b>Хроматография</b> — заттар қоспасын бөлудің, талдаудың және физикалық-химиялық зерттеудің әдісі. Ол бөлінетін заттардың бір-біріне араласпайтын <b>екі фаза</b> арасында әр түрлі таралуына негізделген: бірі <b>қозғалмайтын</b> (сорбент), екіншісі <b>қозғалмалы</b> (элюент — сұйық немесе газ). Сорбция және десорбция процестері көп рет қайталанады, сондықтан аз ғана айырмашылығы бар заттар да бөлінеді. Әдісті 1903 жылы орыс ботанигі <b>М. С. Цвет</b> ашқан (хлорофилл пигменттерін бөлу).</p>
+${fig(['0 0 360 230',`<text x="70" y="14" class="t3" text-anchor="middle">элюент ↓</text>
+<rect x="50" y="22" width="40" height="190" rx="4" class="colw"/>
+<rect x="52" y="40" width="36" height="12" class="z1"/><rect x="52" y="40" width="36" height="12" class="z2" opacity=".0"/>
+<text x="100" y="50" class="t3">қоспа енгізілді</text>
+<text x="145" y="118" class="t1" text-anchor="middle" style="font-size:26px;fill:#F98613">→</text>
+<rect x="190" y="22" width="40" height="190" rx="4" class="colw"/>
+<rect x="192" y="40" width="36" height="14" class="z1">${AN('y','40;75;75;40',6)}</rect><rect x="192" y="40" width="36" height="14" class="z2">${AN('y','40;125;125;40',6)}</rect><rect x="192" y="40" width="36" height="14" class="z3">${AN('y','40;175;175;40',6)}</rect>
+${[60,80,200,220].map((x,i)=>`<circle cx="${x}" cy="0" r="3" class="f-b">${AN('cy','4;24',1.2,-i*.3)}${AN('opacity','1;0',1.2,-i*.3)}</circle>`).join('')}
+<text x="240" y="81" class="t3">A — күшті адсорбция</text><text x="240" y="131" class="t3">B</text><text x="240" y="181" class="t3">C — әлсіз адсорбция</text>
+<text x="210" y="226" class="t3" text-anchor="middle">сорбент (қозғалмайтын фаза)</text>`],'13-сурет. Бағаналы хроматография: заттар сорбентпен әр түрлі ұсталып, жеке зоналарға бөлінеді')}
+<h3>Хроматографиялық анықтаудың сатылары</h3>
+<ol><li>сынама мен сорбентті дайындау (бағананы немесе жұқа қабатты);</li><li>сынаманы бағанаға, жұқа қабатқа немесе қағазға енгізу;</li><li>хроматографиялау (элюентпен жылжыту);</li><li>бөлінген заттар зоналарын детекциялау;</li><li>зоналардағы заттар мөлшерін сандық анықтау.</li></ol>
+<h3>Жіктелуі</h3>
+${T(['Белгісі','Түрлері','Негізі'],[
+['<b>Бөлу механизмі</b>','Адсорбциялық','Заттардың адсорбциялық қасиеттеріндегі айырмашылық'],
+['','Таралу (бөлу)','Компоненттердің қозғалмайтын және жылжымалы сұйық фазаларда ерігіштігінің айырмашылығы'],
+['','Ион алмасу','Иондардың ион алмасу қабілетінің айырмашылығы'],
+['','Молекулалы-елеуіш (гель-фильтрация)','Молекулалардың өлшеміндегі айырмашылық'],
+['<b>Жүргізу техникасы</b>','Бағаналы, қағаздық, жұқа қабатты, капиллярлы','Сорбенттің орналасу түрі'],
+['<b>Фазалар күйі</b>','Газдық (газ–сұйық, газ–қатты)','Қозғалмалы фаза — газ'],
+['','Сұйықтық (сұйық–сұйық, сұйық–қатты, сұйық–гель)','Қозғалмалы фаза — сұйық']])}
+<h3>Медициналық-биологиялық зерттеулерде қолданылуы</h3>
+<ul><li>патологияларда биологиялық сұйықтардағы микрокомпоненттерді анықтау;</li><li>ақуыздарды, аминқышқылдарын, нуклеин қышқылдарын, гормондарды бөлу, тазарту және сандық анықтау;</li><li>стероидты гормондар мен олардың метаболиттерін газ-сұйықтық хроматографиямен (ГСХ) талдау;</li><li>қандағы алкоголь, есірткі, улы заттарды анықтау (сот-медициналық сараптама), допинг-бақылау;</li><li>дәрілік препараттардың тазалығы мен сапасын бақылау, оларды табиғи шикізаттан бөліп алу;</li><li><b>гемосорбция</b> — қан, лимфа, плазманы сорбент арқылы өткізіп, улы заттардан тазарту;</li><li>өкпеден шығатын ауадағы заттарды талдау (эфир, хлороформ, ацетон, этил спирті).</li></ul>
+<h3>Санитарлық-гигиеналық мақсатта</h3>
+<ul><li>ауа, су және топырақтағы ластаушы заттарды (пестицидтер, ауыр металдар, органикалық еріткіштер) анықтау;</li><li>тағамдағы консерванттарды, бояғыштарды, пестицид қалдықтарын бақылау;</li><li>суды деминералдау және тазалығын бақылау;</li><li>жұмыс орны ауасындағы зиянды заттардың концентрациясын бақылау.</li></ul>`}
+];
+})();
+MODS.t06.cards=(()=>{const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`;return [
+{type:'theory',q:'Беттік құбылыстар',a:'Фазалардың бөліну бетінде жүретін, беттік қабаттың ерекше құрамы мен құрылысына байланысты процестер.'},
+{type:'theory',q:'Неліктен бетте артық энергия болады?',a:'Беттегі молекулаға күштер теңгерілмеген: оны тек төмен және жан-жаққа көршілері тартады, сондықтан ол ішке тартылады. Осыдан беттік энергия пайда болады.'},
+{type:'formula',q:'Меншікті бет',a:`<span class="fx">S${B('мен')} = ${F('S'+B('қос'),'V')}</span>Зат ұсақталған сайын артады.`},
+{type:'formula',q:'Беттік керілу σ және беттік энергия',a:`σ — бет бірлігін түзуге жұмсалатын жұмыс (Дж/м${S(2)} = Н/м).<span class="fx">E${B('s')} = σ · S</span>`},
+{type:'theory',q:'Адсорбция',a:'Еріген зат (газ) концентрациясының фазалардың бөліну бетінде өздігінен өзгеруі (бетте жиналуы).'},
+{type:'theory',q:'Десорбция',a:'Адсорбцияға кері процесс — адсорбцияланған молекулалардың беттен кетуі.'},
+{type:'theory',q:'Адсорбент және адсорбтив (адсорбат)',a:'Адсорбент — бетінде адсорбция жүретін зат.<br>Адсорбтив (адсорбат) — бетке жиналатын зат.'},
+{type:'theory',q:'Адсорбция мен абсорбцияның айырмашылығы',a:'Адсорбция — зат тек бетте жиналады.<br>Абсорбция — зат бүкіл көлем бойынша сіңіріледі.<br>Сорбция — екеуін және капиллярлық конденсацияны біріктіретін жалпы атау.'},
+{type:'theory',q:'Адсорбциялық тепе-теңдік',a:'Адсорбция мен десорбция жылдамдықтары теңескен динамикалық күй: v'+B('адс')+' = v'+B('дес')+'.'},
+{type:'theory',q:'Физикалық адсорбция белгілері',a:'Ван-дер-Ваальс күштері; қайтымды; спецификалық емес; T артқанда әлсірейді; жылу бөледі (ΔH &lt; 0); көп қабатты болуы мүмкін.'},
+{type:'theory',q:'Хемосорбция белгілері',a:'Химиялық байланыс; көбіне қайтымсыз; талғамды; T артқанда күшейеді; оқулық бойынша ΔH &gt; 0; тек мономолекулалы қабат.'},
+{type:'formula',q:'Беттік активтілік g',a:`<span class="fx">g = −${F('dσ','dC')} ≈ −${F('Δσ','ΔC')}</span>Бірлігі: Дж·м/моль (Н·м${S(2)}/моль).`},
+{type:'formula',q:'Гиббс теңдеуі',a:`<span class="fx">Г = −${F('C','RT')} · ${F('dσ','dC')} = ${F('C · g','RT')}</span>Г — артық беттік концентрация, моль/м${S(2)}.`},
+{type:'theory',q:'Гиббс теңдеуі бойынша оң адсорбция',a:'dσ/dC &lt; 0 (g &gt; 0) болса, Г &gt; 0 — зат бетке жиналады (БАЗ).'},
+{type:'theory',q:'Беттік активті заттар (БАЗ)',a:'σ-ны төмендетеді: σ &lt; σ'+B(0)+', g &gt; 0, Г &gt; 0.<br>Спирттер, карбон қышқылдары, сабындар, ақуыздар, өт қышқылдары.'},
+{type:'theory',q:'Беттік инактивті заттар (БИЗ)',a:'σ-ны жоғарылатады: σ &gt; σ'+B(0)+', g &lt; 0, Г &lt; 0.<br>NaCl, Na'+B(2)+'SO'+B(4)+', бейорганикалық қышқылдар, негіздер, глицерин, α-аминқышқылдары.'},
+{type:'theory',q:'Беттік активті емес заттар (БАЕЗ)',a:'σ-ны өзгертпейді: σ = σ'+B(0)+', g ≈ 0, Г = 0.<br>Қант (сахароза), глюкоза.'},
+{type:'theory',q:'Дифильді молекула',a:'Полярлы гидрофильді «бас» (–OH, –COOH, –COO'+S('−')+', –SO'+B(3)+S('−')+') және полярсыз гидрофобты көмірсутек «құйрықтан» тұратын молекула.'},
+{type:'theory',q:'Дюкло–Траубе ережесі',a:'Гомологтық қатарда тізбек бір –CH'+B(2)+'– тобына ұзарған сайын беттік активтілік 3–3,5 есе артады (сұйылтылған ерітінді, бөлме температурасы).'},
+{type:'theory',q:'Ленгмюр тұрағы (частоколы)',a:'Қаныққан беттік қабатта БАЗ молекулаларының бір-біріне параллель, тік, тығыз орналасуы: бас — суға, құйрық — ауаға.'},
+{type:'theory',q:'Беттік керілу изотермасы',a:'Тұрақты T-да ерітіндінің беттік керілуінің еріген зат концентрациясына тәуелділігі: σ = f(C).'},
+{type:'theory',q:'Адсорбция изотермасы',a:'Тұрақты T-да адсорбция шамасының тепе-теңдік концентрацияға (қысымға) тәуелділігі: Г = f(C).'},
+{type:'theory',q:'Биологиялық мембрананың құрамы',a:'Липидтер (фосфолипидтер, сфингомиелин, холестерол), ақуыздар, көмірсулар (гликолипидтер, гликопротеидтер). Қалыңдығы ≈ 7–10 нм.'},
+{type:'theory',q:'Сұйық-мозаикалық модель',a:'Мембрана — липидтердің қос қабаты (бастар сыртқа, құйрықтар ішке), оған перифериялық және интегралды ақуыздар асимметриялы батырылған; компоненттер жылжи алады.'},
+{type:'theory',q:'Ленгмюр теориясының қағидалары',a:'1) адсорбция белсенді орталықтарда; 2) әр орталықта бір молекула → мономолекулалы қабат; 3) орталықтар энергиясы тең; 4) адсорбцияланған молекулалар әрекеттеспейді; 5) динамикалық тепе-теңдік.'},
+{type:'formula',q:'Ленгмюр теңдеуі',a:`<span class="fx">Г = Г${B('∞')} · ${F('C','K + C')}</span>Г${B('∞')} — шекті адсорбция; K — десорбция/адсорбция жылдамдық тұрақтыларының қатынасы.`},
+{type:'theory',q:'Ленгмюр изотермасының аймақтары',a:'C ≪ K: Г ≈ Г'+B('∞')+'·C/K (Генри, түзу);<br>орташа C: қисық;<br>C ≫ K: Г ≈ Г'+B('∞')+' (қаныққан).'},
+{type:'formula',q:'Фрейндлих теңдеуі',a:`<span class="fx">a = ${F('x','m')} = K·C${S('1/n')}</span>lg a = lg K + (1/n)·lg C — түзу: кесінді = lg K, көлбеулігі = 1/n.`},
+{type:'theory',q:'БЭТ теориясы',a:'Брунауэр, Эммет, Теллер: полимолекулалы адсорбция, изотерма S-тәрізді.'},
+{type:'formula',q:'Ерітіндіден адсорбция',a:`<span class="fx">Г = ${F('(C'+B(0)+' − C)·V','m')}</span>моль/кг.`},
+{type:'theory',q:'Панет–Фаянс ережесі',a:'Кристалл бетінде алдымен оның құрамына кіретін немесе изоморфты, кристалл торын жалғастыра алатын иондар адсорбцияланады.'},
+{type:'theory',q:'Ион адсорбциясы зарядқа тәуелді ме?',a:'Иә: заряд көп болған сайын күштірек (Na'+S('+')+' &lt; Ca'+S('2+')+' &lt; Al'+S('3+')+'); бірдей зарядта — гидратталған радиусы кіші ион күштірек.'},
+{type:'theory',q:'Лиотроптық (Гофмейстер) қатарлар',a:'Li'+S('+')+' &lt; Na'+S('+')+' &lt; K'+S('+')+' &lt; Rb'+S('+')+' &lt; Cs'+S('+')+'<br>Cl'+S('−')+' &lt; Br'+S('−')+' &lt; NO'+B(3)+S('−')+' &lt; I'+S('−')+' &lt; CNS'+S('−')},
+{type:'theory',q:'Ребиндер ережесі',a:'Адсорбция фазалардың полярлығын теңестіру бағытында жүреді: БАЗ-дың полярлы басы полярлы фазаға, құйрығы полярсыз фазаға бағытталады.'},
+{type:'theory',q:'Полярлы адсорбентте (силикагель) полярсыз еріткіштен',a:'Бас — адсорбентке, құйрық — еріткішке; Дюкло–Траубе ережесі кері орындалады.'},
+{type:'theory',q:'Мицелла және ККМ',a:'Мицелла — БАЗ молекулаларының өздігінен түзетін агрегаты. Ол түзіле бастайтын концентрация — мицелла түзілудің критикалық концентрациясы (ККМ).'},
+{type:'theory',q:'Гидрофильді мицелла құрылысы',a:'Ядро — көмірсутек құйрықтары (гидрофобты); сыртқы қабат — суға бағытталған полярлы топтар. Полярсыз ортада — кері мицелла.'},
+{type:'theory',q:'Солюбилизация',a:'Суда ерімейтін заттардың мицелла ядросына еніп «еруі». Мысалы, өт қышқылдары майлар мен A, D, E, K витаминдерінің сіңірілуіне көмектеседі.'},
+{type:'theory',q:'Ион алмасу адсорбциясы',a:'Адсорбент пен ерітінді арасында бірдей зарядталған иондардың эквивалентті алмасуы.'},
+{type:'theory',q:'Катиониттер мен аниониттер',a:'Катионит R'+S('−')+'H'+S('+')+' — катиондарды алмастырады (–SO'+B(3)+'H, –COOH).<br>Анионит R'+S('+')+'OH'+S('−')+' — аниондарды алмастырады (–N(CH'+B(3)+')'+B(3)+S('+')+', –NH'+B(2)+').'},
+{type:'theory',q:'Иониттердің регенерациясы',a:'Катиониттер — қышқыл ерітіндісімен, аниониттер — сілті ерітіндісімен өңделеді.'},
+{type:'theory',q:'Иониттердің медицинада қолданылуы',a:'Суды, антибиотиктерді, ақуыздарды тазарту; қанды консервілеу (Ca'+S('2+')+'-ді байланыстыру); уланғанда токсиндерді байланыстыру; иондық балансты реттеу.'},
+{type:'theory',q:'Хроматография',a:'Заттардың қозғалмайтын (сорбент) және қозғалмалы (элюент) фазалар арасында әр түрлі таралуына негізделген бөлу әдісі. Ашқан — М. С. Цвет (1903).'},
+{type:'theory',q:'Бөлу механизмі бойынша хроматография',a:'Адсорбциялық, таралу, ион алмасу, молекулалы-елеуіш (гель-фильтрация — молекула өлшемі бойынша).'},
+{type:'theory',q:'Жүргізу техникасы бойынша хроматография',a:'Бағаналы, қағаздық, жұқа қабатты, капиллярлы.'},
+{type:'theory',q:'Хроматографияның медицинада қолданылуы',a:'Биосұйықтардағы микрокомпоненттер, гормондар, аминқышқылдарын бөлу; допинг-бақылау; қандағы алкоголь мен есірткі; дәрі сапасы; гемосорбция.'}
+]})();
+
+MODS.t06.tests.prac=(()=>{
+const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`,s0='σ'+B(0),G='Г',Gi='Г'+B('∞');
+const P=(q,say,e,tag)=>({q,o:[],ans:[],say,e,lbl:'Жауабы',tag:tag||'Теориялық тапсырма'});
+const step=(n,t)=>`<div class="stp"><span>${n}</span><div>${t}</div></div>`;
+return [
+P('1. Мысалдар келтіріңіз: (а) физикалық және химиялық адсорбция; (б) беттік активті, беттік-инактивті және беттік активті емес заттар; (в) дифильді молекулалар. Гомологтық қатарда беттік активтілік қалай өзгереді?',
+'<b>(а)</b> Физикалық адсорбцияға мысал — активтелген көмірдің газдарды жұтуы, ал хемосорбцияға — сутектің никель бетінде атомдарға ыдырап байланысуы. Айырмашылығы: физикалық адсорбция әлсіз Ван-дер-Ваальс күштерімен жүреді, қайтымды; хемосорбцияда химиялық байланыс түзіледі, ол қайтымсыз және талғамды.<br><b>(б)</b> БАЗ — спирттер, карбон қышқылдары, сабындар (σ-ны төмендетеді); беттік-инактивті — NaCl, Na'+B(2)+'SO'+B(4)+' (σ-ны жоғарылатады); беттік активті емес — қант, глюкоза (σ-ны өзгертпейді).<br><b>(в)</b> Дифильді молекула полярлы бас пен полярсыз құйрықтан тұрады, мысалы натрий стеараты, бутанол, фосфолипидтер.<br><b>Гомологтық қатарда</b> Дюкло–Траубе ережесі бойынша тізбек бір –CH'+B(2)+'– тобына ұзарған сайын беттік активтілік 3–3,5 есе артады.',
+'<b>Неге бұлай бөлінеді?</b> Барлығы заттың беттік керілуге әсерімен анықталады. Судың таза беттік керілуі σ'+B(0)+' ≈ 72,8 мН/м. Зат бетке жиналса, σ төмендейді (БАЗ); беттен ығыса, σ артады (БИЗ); бетке де, көлемге де «бейтарап» болса, σ өзгермейді.'+
+T(['Белгі','Физикалық адсорбция','Хемосорбция'],[
+['Мысал','Көмірдің CO'+B(2)+', иісті жұтуы; силикагельдің су буын жұтуы','H'+B(2)+' → 2H–Ni; оттектің металда оксид түзуі'],
+['Күштер','Ван-дер-Ваальс (әлсіз)','Химиялық байланыс'],['Қайтымдылығы','Қайтымды','Көбіне қайтымсыз'],['Талғамдылығы','Талғамсыз','Талғамды'],
+['T артқанда','Әлсірейді','Күшейеді'],['Жылу эффектісі (оқулық)','ΔH &lt; 0','ΔH &gt; 0']])+
+T(['Топ','Мысалдар','σ','g','Г'],[
+['БАЗ','Спирттер, карбон қышқылдары, натрий стеараты, ақуыздар','&lt; '+s0,'&gt; 0','&gt; 0'],
+['БИЗ (беттік-инактивті)','NaCl, Na'+B(2)+'SO'+B(4)+', бейорганикалық қышқылдар, негіздер, глицерин, α-аминқышқылдары','&gt; '+s0,'&lt; 0','&lt; 0'],
+['БАЕЗ (беттік активті емес)','Қант, глюкоза','= '+s0,'≈ 0','0']])+
+'<b>Дифильді молекула</b> = гидрофильді «бас» (–COO'+S('−')+'Na'+S('+')+', –OH, фосфат-холин) + гидрофобты «құйрық» (CH'+B(3)+'(CH'+B(2)+')'+B(16)+'–, C'+B(4)+'H'+B(9)+'–, май қышқылы қалдықтары). Осы «екі жақтылықтың» арқасында ол су мен ауаның (майдың) шекарасына жиналады.<br><br>'+
+'<b>Дюкло–Траубе ережесінің мағынасы:</b> құйрық ұзарған сайын молекула суға «ұнамсызырақ» болады да, бетке күштірек ығыстырылады. Мысалы, сірке → пропион → май қышқылы қатарында беттік активтілік шамамен 1 : 3 : 9 болып өседі (7-тапсырмада есептеп дәлелдейміз).<br>'+
+'<span class="muted">Ескерту: жалпы әдебиетте хемосорбция көбіне экзотермиялық деп беріледі, бірақ сабақта оқулықтағы ΔH &gt; 0 нұсқасын айтыңыз.</span>'),
+
+P('2. Беттік керілу изотермасы мен адсорбция изотермасы дегеніміз не? Оң және теріс адсорбцияның айырмашылығы. Адсорбцияның молекула құрылысына тәуелділігі.',
+'<b>Беттік керілу изотермасы</b> — тұрақты температурада ерітіндінің беттік керілуінің концентрацияға тәуелділігі, σ = f(C). <b>Адсорбция изотермасы</b> — тұрақты температурада адсорбция шамасының концентрацияға тәуелділігі, Г = f(C). Екеуі Гиббс теңдеуімен байланысты: Г = −(C/RT)·(dσ/dC).<br><b>Оң адсорбцияда</b> зат бетке жиналады (Г &gt; 0, σ төмендейді) — бұл БАЗ. <b>Теріс адсорбцияда</b> зат беттен көлемге ығысады (Г &lt; 0, σ артады) — бұл бейорганикалық тұздар.<br>Адсорбция молекуланың гидрофильді және гидрофобты бөліктерінің арақатынасына байланысты: көмірсутек радикалы ұзын болған сайын адсорбция күшті.',
+'<b>Есте сақтау тәсілі:</b> σ-ның таңбасы мен Г-ның таңбасы әрқашан қарама-қарсы, себебі Гиббс теңдеуінде минус бар:'+
+'<span class="fx">Г = −'+F('C','RT')+' · '+F('dσ','dC')+'</span>'+
+'• dσ/dC &lt; 0 (концентрация артқанда σ кемиді) ⟹ Г &gt; 0 — оң адсорбция.<br>• dσ/dC &gt; 0 (σ артады) ⟹ Г &lt; 0 — теріс адсорбция.'+
+T(['Белгі','Оң адсорбция','Теріс адсорбция'],[
+['Не болады?','Зат бетте жиналады','Зат беттен көлемге кетеді'],['Г','&gt; 0','&lt; 0'],['σ','кемиді','артады'],['g = −dσ/dC','&gt; 0','&lt; 0'],
+['Себебі','Гидрофобты құйрық суға «ұнамайды», молекула бетке шығады','Иондар сумен күшті гидратацияланып, көлемге тартылады'],
+['Мысал','Спирттер, сабындар, өт қышқылдары','NaCl, Na'+B(2)+'SO'+B(4)+', HCl']])+
+'<b>Графиктері:</b> БАЗ үшін σ = f(C) қисығы алдымен тез, сосын баяу төмендейді; ал Г = f(C) қисығы өсіп, шекті мәнге Г'+B('∞')+' ұмтылады (бет толық қаныққанда). Конспектідегі «Зертхана» блогында мұны өзіңіз өзгертіп көре аласыз.'),
+
+P('3. Пропанол, бутанол және гексанол ерітінділерінің беттік керілу изотермаларын салыңыз. Су–ауа және су–бензол шекарасында БАЗ молекулалары қалай бағытталады?',
+'Үш изотерма да σ'+B(0)+' нүктесінен басталып, концентрация артқан сайын төмендейді. Бірақ тізбек ұзын болған сайын қисық тігірек түседі: <b>гексанол σ-ны ең күшті, пропанол ең әлсіз төмендетеді</b> (Дюкло–Траубе ережесі). Су–ауа және су–бензол шекарасында молекулалар бірдей бағытталады: <b>полярлы –OH тобы суға, полярсыз көмірсутек құйрығы ауаға немесе бензолға</b> қарайды. Бет қаныққанда молекулалар тік, параллель, тығыз орналасып, Ленгмюр тұрағын түзеді.',
+'<svg viewBox="0 0 320 190" width="100%" style="max-width:420px;display:block;margin:6px auto" font-size="11" font-family="inherit"><line x1="40" y1="15" x2="40" y2="160" stroke="currentColor"/><line x1="40" y1="160" x2="305" y2="160" stroke="currentColor"/><text x="8" y="22" fill="currentColor">σ</text><text x="290" y="178" fill="currentColor">C</text><text x="14" y="34" fill="currentColor">σ₀</text>'+
+'<path d="M40 30 C120 36 200 50 300 62" fill="none" stroke="#0038BD" stroke-width="2.5"/><path d="M40 30 C90 55 180 85 300 100" fill="none" stroke="#F98613" stroke-width="2.5"/><path d="M40 30 C60 90 140 125 300 140" fill="none" stroke="#16875A" stroke-width="2.5"/>'+
+'<text x="200" y="40" fill="#0038BD" font-weight="700">пропанол C₃</text><text x="200" y="80" fill="#F98613" font-weight="700">бутанол C₄</text><text x="120" y="138" fill="#16875A" font-weight="700">гексанол C₆</text></svg>'+
+'<b>Графикті қалай салу керек (тақтада):</b><br>'+step(1,'Ординатаға σ, абсциссаға C белгілеңіз; σ осінде σ'+B(0)+' (таза су) нүктесін қойыңыз.')+step(2,'Үш қисықты да σ'+B(0)+'-ден бастаңыз — C = 0 болғанда кез келген ерітінді таза су сияқты.')+step(3,'Пропанол қисығын ең жоғары (баяу төмендейтін), гексанолды ең төмен (тез төмендейтін) салыңыз; бутанол — ортасында.')+step(4,'Себебін айтыңыз: бутанол пропанолдан ≈ 3,2 есе, гексанол бутанолдан ≈ 3,2² ≈ 10 есе беттік активті.')+
+'<b>Бағытталуы — Ребиндер ережесі бойынша:</b> адсорбция фазалардың полярлығын теңестіреді. Су полярлы, сондықтан –OH (полярлы) суда қалады; ауа мен бензол полярсыз, сондықтан көмірсутек құйрығы солай қарай шығады. Аз концентрацияда молекулалар бетте «жатады», ал қаныққанда тік «тұрады».'),
+
+P('4. Концентрациясы 1 М натрий стеараты, сірке қышқылы, қант және натрий сульфаты ерітінділерін беттік керілудің артуы бойынша орналастырыңыз. Қайсысы беттік активті зат?',
+'Беттік керілудің артуы бойынша: <b>натрий стеараты &lt; сірке қышқылы &lt; қант &lt; натрий сульфаты</b>. Беттік активті заттар — <b>натрий стеараты мен сірке қышқылы</b>, өйткені олардың молекуласы дифильді және олар судың беттік керілуін төмендетеді. Натрий стеаратының көмірсутек радикалы ұзын (C'+B(17)+'), сондықтан ол ең күшті БАЗ. Қант беттік активті емес — σ-ны өзгертпейді. Натрий сульфаты беттік-инактивті — оның иондары гидратацияланып, σ-ны арттырады.',
+'<b>Шешу алгоритмі:</b><br>'+step(1,'Әр затты топқа жатқызыңыз: БАЗ (σ ↓), БАЕЗ (σ = σ'+B(0)+'), БИЗ (σ ↑).')+step(2,'БАЗ-ды өзара салыстырыңыз: гидрофобты бөлігі ұзын болса, σ төменірек.')+step(3,'σ-ның өсуі бойынша тізіңіз: ең күшті БАЗ → әлсіз БАЗ → БАЕЗ → БИЗ.')+
+T(['Орын','Зат','Топ','σ','Себебі'],[
+['1 (ең төмен σ)','Натрий стеараты C'+B(17)+'H'+B(35)+'COONa','Күшті БАЗ','σ ≪ '+s0,'Ұзын гидрофобты радикал C'+B(17)+', бетке өте күшті жиналады'],
+['2','Сірке қышқылы CH'+B(3)+'COOH','Әлсіз БАЗ','σ &lt; '+s0,'Гидрофобты бөлігі қысқа (CH'+B(3)+'–)'],
+['3','Қант (сахароза)','БАЕЗ','σ ≈ '+s0,'Гидрофобты бөлігі жоқ, бетке жиналмайды'],
+['4 (ең жоғары σ)','Натрий сульфаты Na'+B(2)+'SO'+B(4),'БИЗ','σ &gt; '+s0,'Na'+S('+')+' пен SO'+B(4)+S('2−')+' иондары сумен гидратацияланып, көлемге тартылады']])+
+'<span class="muted">Мұғалім «неге сірке қышқылы стеараттан әлсіз?» деп сұраса: тізбекте 2 көміртек пен 18 көміртек — Дюкло–Траубе ережесі бойынша әр –CH'+B(2)+'– беттік активтілікті ≈ 3 есе арттырады.</span>'),
+
+P('5. Күшті электролиттердің адсорбциясы қандай ерекшеліктермен сипатталады? Эквивалентті және ион алмасу адсорбциясы. Панет–Фаянс ережесі.',
+'Күшті электролиттер ерітіндіде толық иондарға ыдырайды, сондықтан олардың адсорбциясы <b>ион түрінде</b> жүреді. Иондар негізінен полярлы адсорбенттерде, яғни иондық кристалдардың бетінде адсорбцияланады. Адсорбцияланған ион бетке заряд береді, оған қарсы иондар тартылып, <b>қос электр қабаты</b> түзіледі. Иондардың адсорбциясы олардың зарядына, радиусына және гидратациясына тәуелді. <b>Эквивалентті адсорбцияда</b> катиондар мен аниондар бетке эквивалентті мөлшерде жиналады, ал <b>ион алмасу адсорбциясында</b> адсорбент бір ионды сіңіріп, орнына ерітіндіге сол зарядты басқа ионды береді. <b>Панет–Фаянс ережесі:</b> кристалл бетінде алдымен оның құрамына кіретін немесе кристалл торын жалғастыра алатын иондар адсорбцияланады.',
+'<b>Молекулалық адсорбциядан айырмашылығы:</b>'+T(['','Молекулалық адсорбция','Ионды адсорбция'],[
+['Кімдерге тән','Бейэлектролиттер, әлсіз электролиттер','Күшті электролиттер'],['Не адсорбцияланады','Бүтін молекула','Жеке ион (катион не анион)'],
+['Адсорбент','Көбіне полярсыз (көмір)','Полярлы (иондық кристалдар)'],['Нәтижесі','Бет зарядталмайды','Бет зарядталады, қос электр қабаты түзіледі']])+
+'<b>Ион зарядына тәуелділігі:</b> заряд көп болса, адсорбция күштірек: Na'+S('+')+' &lt; Ca'+S('2+')+' &lt; Al'+S('3+')+'. Заряды бірдей иондарда гидратталған радиусы кіші ион күштірек адсорбцияланады: Li'+S('+')+' &lt; Na'+S('+')+' &lt; K'+S('+')+' &lt; Rb'+S('+')+' &lt; Cs'+S('+')+' (лиотроптық қатар).<br><br>'+
+'<b>Мысал (Панет–Фаянс):</b> AgI тұнбасын артық AgNO'+B(3)+' ерітіндісінде алсақ, бетке Ag'+S('+')+' иондары жабысады (бет оң зарядталады), өйткені Ag'+S('+')+' — тордың өз ионы. NO'+B(3)+S('−')+' иондары қарсы иондар болып сыртқа орналасады.'),
+
+P('6. Қандай иондар (а) күміс хлоридінің, (б) кальций фосфатының кристалл торын жетілдіре алады?',
+'Панет–Фаянс ережесі бойынша торды тек кристалдың өз құрамындағы немесе оларға изоморфты иондар жалғастыра алады.<br><b>(а) AgCl</b> үшін — <b>Ag'+S('+')+' және Cl'+S('−')+'</b> иондары (сондай-ақ изоморфты Br'+S('−')+', I'+S('−')+'). Ерітіндіде AgNO'+B(3)+' артық болса, Ag'+S('+')+' адсорбцияланып, бет оң зарядталады; KCl артық болса, Cl'+S('−')+' адсорбцияланып, бет теріс зарядталады.<br><b>(б) Ca'+B(3)+'(PO'+B(4)+')'+B(2)+'</b> үшін — <b>Ca'+S('2+')+' және PO'+B(4)+S('3−')+'</b> иондары (pH-қа байланысты HPO'+B(4)+S('2−')+').',
+T(['Кристалл','Торды жетілдіретін иондар','Артық реагент → не адсорбцияланады → бет заряды'],[
+['AgCl','Ag'+S('+')+', Cl'+S('−')+' (Br'+S('−')+', I'+S('−')+')','AgNO'+B(3)+' → Ag'+S('+')+' → «+»<br>KCl, NaCl → Cl'+S('−')+' → «−»'],
+['Ca'+B(3)+'(PO'+B(4)+')'+B(2),'Ca'+S('2+')+', PO'+B(4)+S('3−')+' (HPO'+B(4)+S('2−')+')','CaCl'+B(2)+' → Ca'+S('2+')+' → «+»<br>Na'+B(3)+'PO'+B(4)+' → PO'+B(4)+S('3−')+' → «−»']])+
+'<b>Медициналық мәні (мұғалім сұрауы мүмкін):</b> сүйек тінінің негізі — кальций фосфаты (гидроксиапатит). Радиоактивті стронций ⁹⁰Sr'+S('2+')+' кальцийге ұқсас болғандықтан, осы ереже бойынша сүйектің кристалл торына еніп, ұзақ сақталады. Сол сияқты фтор иондары тіс эмалінде фторапатит түзеді.'),
+
+P('7. Пропион және май қышқылдарының беттік керілу мәндері берілген. Беттік активтілігін есептеп, салыстырыңыз.',
+'Беттік активтілікті g = −Δσ/ΔC формуласымен есептейміз. Пропион қышқылы үшін g = 5,75·10'+S('−5')+' Дж·м/моль, май қышқылы үшін g = 1,73·10'+S('−4')+' Дж·м/моль. Демек <b>май қышқылының беттік активтілігі пропион қышқылынан 3 есе жоғары</b>. Бұл Дюкло–Траубе ережесіне сәйкес: май қышқылы бір –CH'+B(2)+'– тобына ұзын, сондықтан оның активтілігі 3–3,5 есе артық болуы керек.',
+'<b>Берілгені:</b>'+T(['C, моль/л','σ (пропион қышқылы C'+B(2)+'H'+B(5)+'COOH), мН/м','σ (май қышқылы C'+B(3)+'H'+B(7)+'COOH), мН/м'],[['0,0312','69,5','65,8'],['0,0625','67,7','60,4']])+
+'<span class="muted">Тапсырмадағы «мН/моль» — баспа қатесі, беттік керілудің бірлігі мН/м.</span>'+
+'<span class="fx">g = −'+F('Δσ','ΔC')+' = −'+F('σ'+B(2)+' − σ'+B(1),'C'+B(2)+' − C'+B(1))+'</span>'+
+step(1,'Концентрация өзгерісі: ΔC = 0,0625 − 0,0312 = <b>0,0313 моль/л</b>.')+
+step(2,'Пропион қышқылы: Δσ = 67,7 − 69,5 = −1,8 мН/м; g = −(−1,8)/0,0313 = 57,5 мН·л/(м·моль) = <b>5,75·10'+S('−5')+' Дж·м/моль</b>.')+
+step(3,'Май қышқылы: Δσ = 60,4 − 65,8 = −5,4 мН/м; g = −(−5,4)/0,0313 = 172,5 мН·л/(м·моль) = <b>1,73·10'+S('−4')+' Дж·м/моль</b>.')+
+step(4,'Салыстыру: g(май)/g(пропион) = 172,5/57,5 = <b>3,0</b>.')+
+'<b>Бірлікті аудару:</b> 1 мН·л/(м·моль) = 10'+S('−3')+' Н · 10'+S('−3')+' м'+S(3)+'/(м·моль) = 10'+S('−6')+' Н·м'+S(2)+'/моль = 10'+S('−6')+' Дж·м/моль.<br>'+
+'<b>Неге g оң?</b> Концентрация артқанда σ кемиді (Δσ &lt; 0), минус таңбамен g &gt; 0 — екеуі де беттік активті зат.','Есеп'),
+
+P('8. Новокаин мен кокаиннің беттік керілу мәндері бойынша олардың беттік активтілігін және адсорбциясын (25 °C) есептеңіз.',
+'Беттік активтілікті g = −Δσ/ΔC, адсорбцияны Гиббс теңдеуімен Г = C·g/RT есептейміз. Новокаин үшін g = 4,0·10'+S('−5')+' Дж·м/моль, Г = 2,8·10'+S('−6')+' моль/м'+S(2)+'; кокаин үшін g = 1,0·10'+S('−4')+' Дж·м/моль, Г = 7,1·10'+S('−6')+' моль/м'+S(2)+'. Демек <b>кокаиннің беттік активтілігі де, адсорбциясы да новокаиннен 2,5 есе жоғары</b> — ол бетке (мысалы, жасуша мембранасына) күштірек жиналады.',
+'<b>Берілгені:</b>'+T(['Зат','C'+B(1)+', моль/л','σ'+B(1)+', Н/м','C'+B(2)+', моль/л','σ'+B(2)+', Н/м'],[
+['Новокаин','0,20','6,9·10'+S('−2'),'0,15','7,1·10'+S('−2')],['Кокаин','0,20','6,5·10'+S('−2'),'0,15','7,0·10'+S('−2')]])+
+'T = 298 К, R = 8,314 Дж/(моль·К).'+
+'<span class="fx">g = −'+F('Δσ','ΔC')+' &nbsp;&nbsp; Г = '+F('C · g','RT')+'</span>'+
+step(1,'Өзгерістер (2-нүкте минус 1-нүкте): ΔC = 0,15 − 0,20 = −0,05 моль/л.<br>Новокаин: Δσ = 0,071 − 0,069 = +0,002 Н/м; кокаин: Δσ = 0,070 − 0,065 = +0,005 Н/м.<br><span class="muted">Концентрация азайғанда σ өсті, яғни C артқанда σ кемиді — екеуі де БАЗ.</span>')+
+step(2,'Беттік активтілік:<br>новокаин g = −(0,002/−0,05) = 0,04 Н·л/(м·моль) = <b>4,0·10'+S('−5')+' Дж·м/моль</b>;<br>кокаин g = −(0,005/−0,05) = 0,10 Н·л/(м·моль) = <b>1,0·10'+S('−4')+' Дж·м/моль</b>.')+
+step(3,'Орташа концентрация: C = (0,20 + 0,15)/2 = 0,175 моль/л; RT = 8,314 · 298 = 2477,6 Дж/моль.')+
+step(4,'Адсорбция:<br>новокаин Г = 0,175 · 0,04 / 2477,6 = <b>2,8·10'+S('−6')+' моль/м'+S(2)+'</b>;<br>кокаин Г = 0,175 · 0,10 / 2477,6 = <b>7,1·10'+S('−6')+' моль/м'+S(2)+'</b>.')+
+step(5,'Салыстыру: 0,10/0,04 = <b>2,5 есе</b>.')+
+'<b>Бірліктер:</b> (моль/л)·(Н·л/(м·моль)) = Н/м = Дж/м'+S(2)+'; (Дж/м'+S(2)+')/(Дж/моль) = моль/м'+S(2)+'.<br>'+
+'<b>Медициналық мағынасы:</b> жергілікті анестетиктер жүйке талшығының мембранасына адсорбцияланып әсер етеді; беттік активтілігі жоғары кокаин мембранаға күштірек жиналады.','Есеп'),
+
+P('9. Гемосорбция кезінде қандағы кетон денелерінің концентрациясы 0,2 моль/л. '+Gi+' = 3·10'+S('−3')+' моль/г, K = 6·10'+S('−2')+' моль/л болса, 1 г адсорбент қанша кетон денесін адсорбциялайды (Лэнгмюр теңдеуі)?',
+'Ленгмюр теңдеуі бойынша Г = Г'+B('∞')+'·C/(K + C) = 3·10'+S('−3')+' · 0,2/(0,06 + 0,2) = <b>2,31·10'+S('−3')+' моль/г</b>. Яғни 1 г адсорбент қаннан 2,31·10'+S('−3')+' моль кетон денелерін сіңіреді, бұл оның шекті сыйымдылығының <b>77%</b>-ы. C = 0,2 моль/л мәні K-дан үлкен, бірақ одан 10 есе көп емес, сондықтан бұл изотерманың аралық аймағы — теңдеудің толық түрін қолданамыз.',
+'<b>Берілгені:</b> C = 0,2 моль/л; Г'+B('∞')+' = 3·10'+S('−3')+' моль/г; K = 6·10'+S('−2')+' = 0,06 моль/л.<br><b>Табу керек:</b> Г (1 г адсорбентке).'+
+'<span class="fx">Г = Г'+B('∞')+' · '+F('C','K + C')+'</span>'+
+step(1,'Бөлімін табамыз: K + C = 0,06 + 0,2 = 0,26 моль/л.')+
+step(2,'Бөлшек: C/(K + C) = 0,2/0,26 = 0,769.')+
+step(3,'Г = 3·10'+S('−3')+' · 0,769 = <b>2,31·10'+S('−3')+' моль/г</b>.')+
+step(4,'Беттің толу дәрежесі: θ = Г/Г'+B('∞')+' = 0,769 ≈ <b>77%</b>.')+
+'<b>Бірлік тексерісі:</b> (моль/г)·(моль/л)/(моль/л) = моль/г.<br>'+
+'<b>Мағынасы:</b> гемосорбция — қанды сорбенті бар бағана арқылы өткізіп, улы заттарды (мұнда — қант диабетіндегі кетоацидоздың кетон денелерін) байланыстыру. Адсорбент әлі 23% бос, бірақ концентрацияны одан әрі арттырғанда Г баяу өседі, себебі бет Г'+B('∞')+'-ке жақындаған (конспектідегі «Ленгмюр зертханасында» тексеріп көріңіз).','Есеп')
+];
+})();
+
 function route(){
   const hs=location.hash.slice(1);
   if(!unlocked){renderGate();return}
