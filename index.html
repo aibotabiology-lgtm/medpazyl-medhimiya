@@ -2334,7 +2334,7 @@ const ACCESS_HASHES=["c4bd0f6350965a8c48da0cca720bb1db552aac95e108ac17229258f0ac
 const TELEGRAM="https://t.me/nurmedacademy";
 
 const store={get(k,d){try{const v=localStorage.getItem('mchem_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('mchem_'+k,JSON.stringify(v))}catch(e){}}};
-let unlocked=store.get('ok',false);
+let unlocked=true;
 
 const $=(s,r=document)=>r.querySelector(s);
 function h(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k==='html')e.innerHTML=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?'':v)}for(const k of kids.flat()){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(String(k)))}return e}
