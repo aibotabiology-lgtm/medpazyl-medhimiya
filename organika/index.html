@@ -4533,7 +4533,7 @@ const UI_NI={
  lab:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>',
  mix:'<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
  tg:'<path d="M21 4 3 11l6 2 2 6 3-4 5 4z"/><path d="m9 13 8-6"/>'};
-const UI_NAV=[['home','Басты бет','#home','Басты'],['topics','Тақырыптар','#all_notes','Тақырып'],['cards','Карталар','#all_cards','Карта'],['test','Тесттер','#all_test','Тест'],['lab','Зертхана','#all_lab','Зертхана'],['rub','Рубежка','#rub_test','Рубежка'],['mix','Аралас тест','#mix_test','Аралас']];
+const UI_NAV=[['home','Басты бет','#home','Басты'],['topics','Тақырыптар','#all_notes','Тақырып'],['cards','Карталар','#all_cards','Карта'],['test','Тесттер','#all_test','Тест'],['lab','Зертхана','#all_lab','Зертхана'],['rub','Рубежка','#rub_test','Рубежка'],['mix','Аралас тест','#mix_test','Аралас']].filter(x=>!(ORG&&x[0]==='rub'));
 const uiSvg=(path,cls)=>'<svg class="'+(cls||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+path+'</svg>';
 const uiTestCount=m=>{const s=m.tests||{};return (s.bekitu||[]).length};
 const uiArrow='<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -4594,7 +4594,7 @@ function uiTilt(o){return h('div',{class:'stilt'},
   h('b',{},o.title),
   h('div',{class:'stilt-ft',html:uiSvg(UI_NI.topics)+'<span>'+o.foot+'</span>'}))}
 const uiMasc=(src)=>uiTilt({eyebrow:'Медицина / химия',img:src||UI_MZ.hi,title:'Dr. Pazyl',foot:'Конспект · карта · тест'});
-const UI_PILLS=act=>[['Тақырыптар','#all_notes',act==='topics',null,UI_NI.topics,'#2F6BE0'],['Карталар','#all_cards',act==='cards',null,UI_NI.cards,'#1F9D74'],['Тесттер','#all_test',act==='test',null,UI_NI.test,'#7A55E0'],['Зертхана','#all_lab',act==='lab',null,UI_NI.lab,'#1A93BF'],['Рубежка','#rub_test',act==='rub',null,UI_NI.rub,'#E8664A'],['Аралас тест','#mix_test',act==='mix',null,UI_NI.mix,'#C98A06']];
+const UI_PILLS=act=>[['Тақырыптар','#all_notes',act==='topics',null,UI_NI.topics,'#2F6BE0'],['Карталар','#all_cards',act==='cards',null,UI_NI.cards,'#1F9D74'],['Тесттер','#all_test',act==='test',null,UI_NI.test,'#7A55E0'],['Зертхана','#all_lab',act==='lab',null,UI_NI.lab,'#1A93BF'],['Рубежка','#rub_test',act==='rub',null,UI_NI.rub,'#E8664A'],['Аралас тест','#mix_test',act==='mix',null,UI_NI.mix,'#C98A06']].filter(x=>!(ORG&&x[1]==='#rub_test'));
 const UI_HOME_TABS=act=>UI_PILLS(act);
 
 /* ---------- тақырыптар тізімі (нөмірлі сызық) ---------- */
@@ -4641,6 +4641,7 @@ function renderHome(){
 /* ---------- тақырып беті ---------- */
 function renderModule(id,tab,sub){
   if(id==='mar'){uiMarathon(sub);return}
+  if(ORG&&id==='rub'){location.replace('#home');return}
   if(id==='mix'||id==='rub'||id==='all'){uiSpecial(id,tab,sub);return}
   const t=TOPICS.find(x=>x.id===id),m=MODS[id];
   const act=tab==='cards'?'cards':tab==='test'?'test':tab==='lab'?'lab':'topics';
