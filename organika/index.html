@@ -1214,6 +1214,350 @@ a.tl:hover{background:var(--sky-soft);border-color:#BFE3F5;box-shadow:none}
 <div id="app"><div class="loading">Жүктелуде…</div></div>
 
 <script>
+/* ===== MOL: SMILES → 2D құрылымдық формула (SVG), молекулалық формула, M =====
+   Kekulé SMILES only (no lowercase aromatic atoms). Pseudo-atoms in brackets: [R], [R'], [Ar], [X].
+   Exports (global): MOL.parse(s) → graph, MOL.formula(g), MOL.mass(g), MOL.svg(s,opts), MOL.layout(g)          */
+(function(root){
+const AM={H:1.008,B:10.81,C:12.011,N:14.007,O:15.999,F:18.998,Na:22.990,Mg:24.305,Al:26.982,Si:28.086,P:30.974,S:32.06,Cl:35.45,K:39.098,Ca:40.078,Mn:54.938,Fe:55.845,Co:58.933,Cu:63.546,Zn:65.38,Br:79.904,Ag:107.87,I:126.90,Ba:137.33,Hg:200.59,Pb:207.2,Li:6.94,Cr:51.996,Ni:58.693,Se:78.97};
+const VAL={B:[3],C:[4],N:[3,5],O:[2],P:[3,5],S:[2,4,6],F:[1],Cl:[1],Br:[1],I:[1],Si:[4]};
+const ORGANIC=['Cl','Br','B','C','N','O','P','S','F','I'];
+
+function parse(s){
+  const atoms=[],bonds=[];let i=0,prev=null,pendBond=null;const stack=[],rings={};let part=0;
+  const err=m=>{throw new Error('SMILES "'+s+'": '+m+' @'+i)};
+  const addBond=(a,b,o)=>{bonds.push({a,b,o:o||1});};
+  while(i<s.length){
+    const c=s[i];
+    if(c==='('){stack.push(prev);i++;continue}
+    if(c===')'){prev=stack.pop();i++;continue}
+    if(c==='-'){pendBond=1;i++;continue}
+    if(c==='='){pendBond=2;i++;continue}
+    if(c==='#'){pendBond=3;i++;continue}
+    if(c==='/'||c==='\\'){i++;continue}               // cis/trans marks: ignored in drawing
+    if(c==='.'){prev=null;part++;i++;continue}
+    if(/[0-9%]/.test(c)){
+      let n;if(c==='%'){n=s.substr(i+1,2);i+=3}else{n=c;i++}
+      if(prev==null)err('ring bond without atom');
+      if(rings[n]){const r=rings[n];addBond(r.a,prev,pendBond||r.o||1);delete rings[n]}
+      else rings[n]={a:prev,o:pendBond};
+      pendBond=null;continue}
+    let at=null;
+    if(c==='['){
+      const j=s.indexOf(']',i);if(j<0)err('no ]');const t=s.slice(i+1,j);i=j+1;
+      const m=t.match(/^(\d+)?([A-Z][a-z]?|\*)(@{0,2})(H\d?)?([+-]\d*|[+-]+)?(?::\d+)?$/);
+      if(m&&(AM[m[2]]||m[2]==='*')){let ch=0;if(m[5]){const q=m[5];if(/^[+-]\d+$/.test(q))ch=parseInt(q);else ch=(q[0]==='+'?1:-1)*q.length}
+        at={el:m[2],br:true,h:m[4]?(m[4].length>1?+m[4].slice(1):1):0,ch,chi:m[3]||''}}
+      else at={el:'R',lab:t,br:true,h:0,ch:0,pseudo:true};     // pseudo atom label, e.g. R, R', Ar, CH2OH-group
+    }else{
+      let el=null;for(const o of ORGANIC)if(s.startsWith(o,i)){el=o;break}
+      if(!el){if(/[a-z]/.test(c))err('aromatic lowercase not allowed, use Kekulé');err('bad char '+c)}
+      i+=el.length;at={el,br:false,h:null,ch:0};
+    }
+    at.part=part;const k=atoms.length;atoms.push(at);
+    if(prev!=null)addBond(prev,k,pendBond||1);
+    pendBond=null;prev=k;
+  }
+  if(Object.keys(rings).length)err('unclosed ring');
+  const nb=atoms.map(()=>[]);bonds.forEach((b,bi)=>{nb[b.a].push({to:b.b,o:b.o,bi});nb[b.b].push({to:b.a,o:b.o,bi})});
+  atoms.forEach((a,k)=>{const sum=nb[k].reduce((x,y)=>x+y.o,0);a.deg=nb[k].length;a.bo=sum;
+    if(a.h===null){const v=VAL[a.el]||[0];let h=0;for(const vv of v){if(vv>=sum){h=vv-sum;break}}a.h=h}});
+  return {s,atoms,bonds,nb};
+}
+function formula(g){
+  const cnt={},ps={};let ch=0,pseudo=false;
+  g.atoms.forEach(a=>{if(a.pseudo||a.el==='*'){const fr=a.lab&&fragF(a.lab);if(fr){for(const k in fr)cnt[k]=(cnt[k]||0)+fr[k];return}ps[a.lab||'*']=(ps[a.lab||'*']||0)+1;pseudo=true;return}cnt[a.el]=(cnt[a.el]||0)+1;if(a.h)cnt.H=(cnt.H||0)+a.h;ch+=a.ch});
+  return {cnt,ch,pseudo,ps}}
+function fragF(t){if(!/^([A-Z][a-z]?\d*)+$/.test(t))return null;const r={};const re=/([A-Z][a-z]?)(\d*)/g;let m;while((m=re.exec(t))){if(!AM[m[1]])return null;r[m[1]]=(r[m[1]]||0)+(m[2]?+m[2]:1)}return r}
+function hill(f){const c=f.cnt;const keys=Object.keys(c);const ord=c.C?['C','H',...keys.filter(k=>k!=='C'&&k!=='H').sort()]:keys.sort();
+  return ord.filter(k=>c[k]).map(k=>k+(c[k]>1?'<sub>'+c[k]+'</sub>':'')).join('')+(f.ch?'<sup>'+(Math.abs(f.ch)>1?Math.abs(f.ch):'')+(f.ch>0?'+':'−')+'</sup>':'')}
+function hillTxt(f){const c=f.cnt;const keys=Object.keys(c);const ord=c.C?['C','H',...keys.filter(k=>k!=='C'&&k!=='H').sort()]:keys.sort();return ord.filter(k=>c[k]).map(k=>k+(c[k]>1?c[k]:'')).join('')+(f.ch?(f.ch>0?'+':'-')+Math.abs(f.ch):'')}
+function mass(g){const f=formula(g);if(f.pseudo)return null;let m=0;for(const k in f.cnt)m+=AM[k]*f.cnt[k];return m}
+
+/* ---------- rings (SSSR by shortest cycles + GF(2) independence) ---------- */
+function rings(g){
+  const n=g.atoms.length,E=g.bonds.length;
+  // number of components
+  const comp=new Array(n).fill(-1);let C=0;for(let i=0;i<n;i++)if(comp[i]<0){const q=[i];comp[i]=C;while(q.length){const u=q.pop();for(const e of g.nb[u])if(comp[e.to]<0){comp[e.to]=C;q.push(e.to)}}C++}
+  const need=E-n+C;if(need<=0)return [];
+  const cands=[];
+  g.bonds.forEach((b,bi)=>{ // shortest path a→b avoiding bond bi
+    const prev=new Array(n).fill(-2);prev[b.a]=-1;const q=[b.a];let h=0;
+    while(h<q.length){const u=q[h++];if(u===b.b)break;for(const e of g.nb[u]){if(e.bi===bi)continue;if(prev[e.to]===-2){prev[e.to]=u;q.push(e.to)}}}
+    if(prev[b.b]===-2)return;
+    const path=[];let u=b.b;while(u!==-1){path.push(u);u=prev[u]}
+    cands.push(path)});
+  const key=p=>p.slice().sort((x,y)=>x-y).join(',');
+  const uniq={};cands.forEach(p=>{const k=key(p);if(!uniq[k])uniq[k]=p});
+  const list=Object.values(uniq).sort((a,b)=>a.length-b.length);
+  const bidx={};g.bonds.forEach((b,bi)=>{bidx[Math.min(b.a,b.b)+'-'+Math.max(b.a,b.b)]=bi});
+  const vec=p=>{const v=new Uint8Array(E);for(let k=0;k<p.length;k++){const a=p[k],b=p[(k+1)%p.length];v[bidx[Math.min(a,b)+'-'+Math.max(a,b)]]^=1}return v};
+  const basis=[],out=[];
+  for(const p of list){let v=vec(p);
+    for(const [pv,piv] of basis){if(v[piv])for(let k=0;k<E;k++)v[k]^=pv[k]}
+    const piv=v.indexOf(1);if(piv<0)continue;
+    basis.push([v,piv]);
+    // keep basis reduced
+    out.push(p);if(out.length>=need)break}
+  return out;
+}
+
+/* ---------- layout ---------- */
+const D2R=Math.PI/180;
+function layout(g){
+  const n=g.atoms.length,P=new Array(n).fill(null),R=rings(g);
+  g.rings=R;const inRing=new Array(n).fill(0);R.forEach(r=>r.forEach(a=>inRing[a]++));
+  // ring systems
+  const sys=[];const rs=new Array(R.length).fill(-1);
+  R.forEach((r,ri)=>{if(rs[ri]>=0)return;const S=[ri];rs[ri]=sys.length;for(let h=0;h<S.length;h++){const A=new Set(R[S[h]]);R.forEach((r2,rj)=>{if(rs[rj]<0&&r2.some(x=>A.has(x))){rs[rj]=sys.length;S.push(rj)}})}sys.push(S)});
+  const atomSys=new Array(n).fill(-1);sys.forEach((S,si)=>S.forEach(ri=>R[ri].forEach(a=>atomSys[a]=si)));
+  const nb=g.nb;
+  const polyOn=(ring,a,b,awayFrom)=>{ // place regular polygon for ring containing edge a-b (both placed); return positions map
+    const m=ring.length;const ia=ring.indexOf(a),ib=ring.indexOf(b);
+    // order: walk from a to b direction such that next after a is b
+    let ord;if(ring[(ia+1)%m]===b)ord=ring.slice(ia).concat(ring.slice(0,ia));else ord=ring.slice(ia+1).concat(ring.slice(0,ia+1)).reverse();
+    // ord[0]=a, ord[1]=b
+    const A=P[a],B=P[b];const ex=B[0]-A[0],ey=B[1]-A[1];const L=Math.hypot(ex,ey)||1;
+    const mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2;const r=L/(2*Math.sin(Math.PI/m)),ap=L/(2*Math.tan(Math.PI/m));
+    let nx=-ey/L,ny=ex/L;if(awayFrom&&((mx+nx-awayFrom[0])**2+(my+ny-awayFrom[1])**2)<((mx-nx-awayFrom[0])**2+(my-ny-awayFrom[1])**2)){nx=-nx;ny=-ny}
+    const cx=mx+nx*ap,cy=my+ny*ap;
+    const a0=Math.atan2(A[1]-cy,A[0]-cx),a1=Math.atan2(B[1]-cy,B[0]-cx);let step=a1-a0;while(step>Math.PI)step-=2*Math.PI;while(step<-Math.PI)step+=2*Math.PI;
+    const res={};for(let k=0;k<m;k++){res[ord[k]]=[cx+r*Math.cos(a0+step*k),cy+r*Math.sin(a0+step*k)]}return res};
+  function placeSystem(si,attach,pos,dir){ // place whole ring system; attach atom goes to pos; system extends along dir
+    const S=sys[si].slice().sort((x,y)=>R[y].length-R[x].length);
+    const loc={};const placedR=new Set();
+    // start with ring containing attach (or largest)
+    let first=attach!=null?S.find(ri=>R[ri].includes(attach)):S[0];if(first==null)first=S[0];
+    const r0=R[first],m=r0.length,rad=1/(2*Math.sin(Math.PI/m));
+    r0.forEach((a,k)=>{const t=2*Math.PI*k/m;loc[a]=[rad*Math.cos(t),rad*Math.sin(t)]});placedR.add(first);
+    let guard=0;
+    while(placedR.size<S.length&&guard++<50){
+      for(const ri of S){if(placedR.has(ri))continue;const r=R[ri];const pl=r.filter(a=>loc[a]);if(pl.length<1)continue;
+        // find placed edge in ring
+        let ea=null,eb=null;for(let k=0;k<r.length;k++){const a=r[k],b=r[(k+1)%r.length];if(loc[a]&&loc[b]){ea=a;eb=b;break}}
+        if(ea==null){ // spiro: one shared atom
+          const sa=pl[0];const m2=r.length;const cenAll=centroid(Object.values(loc));const out=Math.atan2(loc[sa][1]-cenAll[1],loc[sa][0]-cenAll[0]);
+          const rad2=1/(2*Math.sin(Math.PI/m2));const cx=loc[sa][0]+Math.cos(out)*rad2,cy=loc[sa][1]+Math.sin(out)*rad2;
+          const i0=r.indexOf(sa);const a0=out+Math.PI;
+          for(let k=0;k<m2;k++){const a=r[(i0+k)%m2];if(!loc[a])loc[a]=[cx+rad2*Math.cos(a0+2*Math.PI*k/m2),cy+rad2*Math.sin(a0+2*Math.PI*k/m2)]}
+          placedR.add(ri);continue}
+        // centroid of placed atoms of rings sharing this edge
+        const sh=[...placedR].filter(rj=>R[rj].includes(ea)&&R[rj].includes(eb));
+        const cen=sh.length?centroid(R[sh[0]].map(a=>loc[a])):centroid(Object.values(loc));
+        const save=P.slice();Object.keys(loc).forEach(k=>P[k]=loc[k]);
+        const res=polyOn(r,ea,eb,cen);for(const k in res)if(!loc[k])loc[k]=res[k];
+        for(let k=0;k<n;k++)P[k]=save[k];
+        placedR.add(ri)}
+    }
+    // transform: attach at pos, centroid along dir
+    const keys=Object.keys(loc).map(Number);const cen=centroid(keys.map(k=>loc[k]));
+    if(attach==null){keys.forEach(k=>P[k]=[loc[k][0]-cen[0]+pos[0],loc[k][1]-cen[1]+pos[1]]);return keys}
+    const v=[cen[0]-loc[attach][0],cen[1]-loc[attach][1]];const cur=Math.atan2(v[1],v[0]);const rot=dir-cur;
+    const c=Math.cos(rot),s=Math.sin(rot);
+    keys.forEach(k=>{const x=loc[k][0]-loc[attach][0],y=loc[k][1]-loc[attach][1];P[k]=[pos[0]+x*c-y*s,pos[1]+x*s+y*c]});
+    return keys}
+  function centroid(pts){let x=0,y=0;pts.forEach(p=>{x+=p[0];y+=p[1]});return [x/pts.length,y/pts.length]}
+  const turn=new Array(n).fill(1);
+  const queue=[];
+  // start: atom 0 (or first ring system if atom 0 is in ring)
+  for(let st=0;st<n;st++){if(P[st])continue;
+    const off=[(g._partX||0),0];
+    if(atomSys[st]>=0){placeSystem(atomSys[st],null,off,0).forEach(k=>queue.push(k))}
+    else{P[st]=off;turn[st]=1;queue.push(st);g._startDir=g._startDir||{};}
+    while(queue.length){
+      const u=queue.shift();
+      const un=nb[u].filter(e=>!P[e.to]);if(!un.length)continue;
+      const pl=nb[u].filter(e=>P[e.to]);
+      let dirs=[];
+      const ang=e=>Math.atan2(P[e.to][1]-P[u][1],P[e.to][0]-P[u][0]);
+      const sp=nb[u].some(e=>e.o===3)||nb[u].filter(e=>e.o===2).length===2;
+      if(atomSys[u]>=0){ // ring atom: substituents outward
+        const myR=R.filter(r=>r.includes(u));const cen=centroid([].concat(...myR.map(r=>r.map(a=>P[a]))));
+        const out=Math.atan2(P[u][1]-cen[1],P[u][0]-cen[0]);
+        if(un.length===1)dirs=[out];else if(un.length===2)dirs=[out-35*D2R,out+35*D2R];else dirs=un.map((_,k)=>out+(k-(un.length-1)/2)*50*D2R);
+      }else if(pl.length===0){ // chain start
+        if(sp&&un.length<=2)dirs=[0,Math.PI];else if(un.length===1)dirs=[-30*D2R];else if(un.length===2)dirs=[-30*D2R,210*D2R];else if(un.length===3)dirs=[-30*D2R,210*D2R,90*D2R];else dirs=un.map((_,k)=>k*2*Math.PI/un.length);
+        turn[u]=1;
+      }else if(pl.length===1){
+        const inc=ang(pl[0])+Math.PI; // direction of travel
+        if(sp&&un.length===1)dirs=[inc];
+        else if(un.length===1){const t=-turn[u];dirs=[inc+t*60*D2R]}
+        else if(un.length===2){dirs=[inc+(-turn[u])*60*D2R,inc+turn[u]*60*D2R]}
+        else if(un.length===3)dirs=[inc+90*D2R,inc,inc-90*D2R];
+        else dirs=un.map((_,k)=>inc+(k-(un.length-1)/2)*(240/un.length)*D2R);
+      }else{ // ≥2 placed neighbours: biggest gap
+        const as=pl.map(ang).map(a=>(a+2*Math.PI)%(2*Math.PI)).sort((a,b)=>a-b);let best=0,bi=0;
+        for(let k=0;k<as.length;k++){const a=as[k],b=k+1<as.length?as[k+1]:as[0]+2*Math.PI;if(b-a>best){best=b-a;bi=k}}
+        dirs=un.map((_,k)=>as[bi]+best*(k+1)/(un.length+1));
+      }
+      // order: put longest branch on the zig-zag continuation (first dir)
+      const size=e=>{const seen=new Set([u]);const q=[e.to];seen.add(e.to);let c=0;while(q.length){const x=q.pop();c++;for(const f of nb[x])if(!seen.has(f.to)&&!P[f.to]){seen.add(f.to);q.push(f.to)}}return c};
+      const ord=un.slice().sort((a,b)=>size(b)-size(a));
+      ord.forEach((e,k)=>{const d=dirs[k];const v=e.to;
+        const pos=[P[u][0]+Math.cos(d),P[u][1]+Math.sin(d)];
+        if(atomSys[v]>=0&&!P[v]){placeSystem(atomSys[v],v,pos,d).forEach(a=>{if(a!==v)queue.push(a)});queue.push(v)}
+        else{P[v]=pos;turn[v]=(k===0?-turn[u]*(pl.length?1:1):turn[u]);
+          if(pl.length===0&&k===1)turn[v]=1;
+          queue.push(v)}});
+    }
+    // next disconnected part: shift right
+    let mx=-1e9;P.forEach(p=>{if(p)mx=Math.max(mx,p[0])});g._partX=mx+1.4;
+  }
+  return P;
+}
+
+/* ---------- SVG drawing ---------- */
+const COL={C:'#0D1820',O:'#D8452F',N:'#2F6BE0',S:'#B58A00',P:'#D9731F',Cl:'#1F9D74',Br:'#A04B1F',I:'#7A55E0',F:'#1F9D74',R:'#1B7DB0',H:'#0D1820',Na:'#7A55E0',K:'#7A55E0',Mg:'#2F7A4F',Ca:'#2F7A4F',Fe:'#A04B1F',Cu:'#A04B1F',Ag:'#5A6B78'};
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function svg(s,o={}){
+  const g=typeof s==='string'?parse(s):s;
+  const P=layout(g);const n=g.atoms.length;
+  // overlap fix: try mirroring substituents to reduce clashes (simple greedy)
+  untangle(g,P);
+  const nC=g.atoms.filter(a=>a.el==='C').length;
+  const L0=o.bond||30,fs=o.font||Math.round(L0*0.52),pad=o.pad||fs*0.9,full=o.full||(o.full!==false&&nC<=2&&!g.rings.length&&g.atoms.length<=6),L=full?L0*1.5:L0; // full: label all carbons (CH3, CH2…)
+  const lab=g.atoms.map((a,k)=>{
+    if(a.pseudo)return {t:a.lab,h:0,c:fragF(a.lab)?'#0D1820':COL.R,ps:1,w:a.lab.replace(/\d/g,'').length+a.lab.replace(/\D/g,'').length*0.68};
+    const show=a.el!=='C'||a.ch||full||g.atoms.length===1;
+    if(!show)return null;
+    return {t:a.el,h:a.h,ch:a.ch,c:COL[a.el]||'#0D1820'}});
+  const side=g.atoms.map((a,k)=>{
+    if(!g.nb[k].length)return ['O','S','F','Cl','Br','I'].includes(a.el)?'L':'R';
+    const angs=g.nb[k].map(e=>Math.atan2(P[e.to][1]-P[k][1],P[e.to][0]-P[k][0]));
+    const free=d=>angs.every(t=>{let x=Math.abs(t-d)%(2*Math.PI);if(x>Math.PI)x=2*Math.PI-x;return x>(d===0||d===Math.PI?62:55)*D2R});
+    if(free(0))return 'R';if(free(Math.PI))return 'L';if(a.el!=='C'){if(free(Math.PI/2))return 'D';if(free(-Math.PI/2))return 'U'}
+    let sx=0;angs.forEach(t=>sx+=Math.cos(t));return sx>0?'L':'R'});
+  // label boxes (px, relative to atom centre)
+  const cw=fs*0.62,box=lab.map((l,k)=>{if(!l)return null;const we=(l.w||l.t.length)*cw,hw=l.h?cw*(l.h>1?1.6:1):0,cwid=l.ch?cw*0.7:0;
+    const sd=l.h?side[k]:'R';
+    if(sd==='R')return {l:-we/2,r:we/2+hw+cwid,t:-fs*0.5,b:fs*0.5,we,hw,sd};
+    if(sd==='L')return {l:-we/2-hw,r:we/2+cwid,t:-fs*0.5,b:fs*0.5,we,hw,sd};
+    const w2=Math.max(we/2,hw/2);
+    return sd==='D'?{l:-w2,r:Math.max(we/2+cwid,hw/2),t:-fs*0.5,b:fs*1.45,we,hw,sd}:{l:-w2,r:Math.max(we/2+cwid,hw/2),t:-fs*1.45,b:fs*0.5,we,hw,sd}});
+  const clip=(k,ux,uy)=>{const bx=box[k];if(!bx)return 0;const g2=2.5;const ex=ux>0?bx.r+g2:-(bx.l-g2),ey=uy>0?bx.b+g2:-(bx.t-g2);
+    const tx=Math.abs(ux)>1e-6?ex/Math.abs(ux):1e9,ty=Math.abs(uy)>1e-6?ey/Math.abs(uy):1e9;return Math.min(tx,ty)/L};
+  // stretch terminal labelled atoms so that a visible bond remains
+  g.atoms.forEach((a,k)=>{if(g.nb[k].length!==1||!box[k])return;const j=g.nb[k][0].to;const dx=P[k][0]-P[j][0],dy=P[k][1]-P[j][1],len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len;
+    const need=clip(k,-ux,-uy)+clip(j,ux,uy)+0.5;if(need>len){P[k]=[P[j][0]+ux*need,P[j][1]+uy*need]}});
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;P.forEach((p,k)=>{const bx=box[k];x0=Math.min(x0,p[0]+(bx?bx.l/L:0));x1=Math.max(x1,p[0]+(bx?bx.r/L:0));y0=Math.min(y0,p[1]+(bx?bx.t/L:0));y1=Math.max(y1,p[1]+(bx?bx.b/L:0))});
+  const W=(x1-x0)*L+2*pad,H=(y1-y0)*L+2*pad;
+  const X=p=>(p[0]-x0)*L+pad,Y=p=>(p[1]-y0)*L+pad;
+  const parts=[];const bc=o.bondColor||'#0D1820',lw=o.lw||1.6;
+  const ringOf=(a,b)=>g.rings.filter(r=>r.includes(a)&&r.includes(b));
+  g.bonds.forEach(b=>{
+    let A=P[b.a],B=P[b.b];const dx=B[0]-A[0],dy=B[1]-A[1],len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len;
+    const sa=clip(b.a,ux,uy),sb=clip(b.b,-ux,-uy);
+    if(sa+sb>len-0.08)return;
+    const a=[A[0]+ux*sa,A[1]+uy*sa],c=[B[0]-ux*sb,B[1]-uy*sb];
+    const line=(p,q,extra)=>parts.push(`<line x1="${X(p).toFixed(1)}" y1="${Y(p).toFixed(1)}" x2="${X(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${bc}" stroke-width="${lw}" stroke-linecap="round"${extra||''}/>`);
+    const off=0.17,nx=-uy,ny=ux;
+    if(b.o===1){line(a,c)}
+    else if(b.o===2){
+      const rr=ringOf(b.a,b.b);
+      if(rr.length){ // inner line toward ring centre
+        const r=rr.sort((p,q)=>p.length-q.length)[0];let cx=0,cy=0;r.forEach(k=>{cx+=P[k][0];cy+=P[k][1]});cx/=r.length;cy/=r.length;
+        const mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2;const sgn=((cx-mx)*nx+(cy-my)*ny)>0?1:-1;
+        line(a,c);const tr=0.16;
+        const p=[A[0]+ux*Math.max(sa,tr)+nx*off*sgn,A[1]+uy*Math.max(sa,tr)+ny*off*sgn],q=[B[0]-ux*Math.max(sb,tr)+nx*off*sgn,B[1]-uy*Math.max(sb,tr)+ny*off*sgn];line(p,q)}
+      else{
+        const da=g.atoms[b.a].deg,db=g.atoms[b.b].deg;
+        if(da===1||db===1||lab[b.a]&&lab[b.b]){ // centred pair
+          const h=off/2;line([a[0]+nx*h,a[1]+ny*h],[c[0]+nx*h,c[1]+ny*h]);line([a[0]-nx*h,a[1]-ny*h],[c[0]-nx*h,c[1]-ny*h])}
+        else{ // offset to side of other substituents
+          let side=0;for(const e of g.nb[b.a])if(e.to!==b.b){side+=(P[e.to][0]-A[0])*nx+(P[e.to][1]-A[1])*ny}
+          for(const e of g.nb[b.b])if(e.to!==b.a){side+=(P[e.to][0]-B[0])*nx+(P[e.to][1]-B[1])*ny}
+          const sgn=side>=0?1:-1;line(a,c);const tr=0.16;
+          line([A[0]+ux*Math.max(sa,tr)+nx*off*sgn,A[1]+uy*Math.max(sa,tr)+ny*off*sgn],[B[0]-ux*Math.max(sb,tr)+nx*off*sgn,B[1]-uy*Math.max(sb,tr)+ny*off*sgn])}
+      }}
+    else if(b.o===3){line(a,c);line([a[0]+nx*off,a[1]+ny*off],[c[0]+nx*off,c[1]+ny*off]);line([a[0]-nx*off,a[1]-ny*off],[c[0]-nx*off,c[1]-ny*off])}
+  });
+  const sub=fs*0.68,bg=o.bg||'#fff';
+  lab.forEach((l,k)=>{if(!l)return;const x=X(P[k]),y=Y(P[k]),bx=box[k];
+    parts.push(`<rect x="${(x+bx.l-1).toFixed(1)}" y="${(y+bx.t-1).toFixed(1)}" width="${(bx.r-bx.l+2).toFixed(1)}" height="${(bx.b-bx.t+2).toFixed(1)}" fill="${bg}" rx="2"/>`);
+    const el=l.ps?esc(l.t).replace(/(\d+)/g,`<tspan dy="${(fs*0.26).toFixed(1)}" font-size="${sub.toFixed(1)}">$1</tspan><tspan dy="${(-fs*0.26).toFixed(1)}">​</tspan>`):esc(l.t),hN=l.h>1?`<tspan dy="${(fs*0.26).toFixed(1)}" font-size="${sub.toFixed(1)}">${l.h}</tspan>`:'',back=l.h>1?fs*0.26:0;
+    const chs=l.ch?`<tspan dy="${(-fs*0.36-back).toFixed(1)}" font-size="${sub.toFixed(1)}">${Math.abs(l.ch)>1?Math.abs(l.ch):''}${l.ch>0?'+':'−'}</tspan>`:'';
+    const base=(y+fs*0.36).toFixed(1);
+    if(!l.h){parts.push(`<text x="${(x-bx.we/2).toFixed(1)}" y="${base}" font-size="${fs}" fill="${l.c}" font-weight="600" ${l.ps?'':`textLength="${bx.we.toFixed(1)}" lengthAdjust="spacingAndGlyphs"`}>${el}</text>`+(chs?`<text x="${(x+bx.we/2).toFixed(1)}" y="${base}" font-size="${fs}" fill="${l.c}" font-weight="600">${chs.replace('dy="'+(-fs*0.36).toFixed(1)+'"','dy="'+(-fs*0.36).toFixed(1)+'"')}</text>`:''));return}
+    if(bx.sd==='U'||bx.sd==='D'){const hy=bx.sd==='D'?y+fs*1.3:y-fs*0.6;
+      parts.push(`<text x="${(x-bx.we/2).toFixed(1)}" y="${base}" font-size="${fs}" fill="${l.c}" font-weight="600">${el}${l.ch?`<tspan dy="${(-fs*0.36).toFixed(1)}" font-size="${sub.toFixed(1)}">${Math.abs(l.ch)>1?Math.abs(l.ch):''}${l.ch>0?'+':'−'}</tspan>`:''}</text>`);
+      parts.push(`<text x="${(x-bx.hw/2).toFixed(1)}" y="${hy.toFixed(1)}" font-size="${fs}" fill="${l.c}" font-weight="600">H${hN}</text>`);return}
+    if(bx.sd==='R')parts.push(`<text x="${(x-bx.we/2).toFixed(1)}" y="${base}" font-size="${fs}" fill="${l.c}" font-weight="600">${el}H${hN}${chs}</text>`);
+    else parts.push(`<text x="${(x-bx.we/2-bx.hw).toFixed(1)}" y="${base}" font-size="${fs}" fill="${l.c}" font-weight="600">H${hN}${l.h>1?`<tspan dy="${(-fs*0.26).toFixed(1)}">${el}</tspan>`:el}${l.ch?`<tspan dy="${(-fs*0.36).toFixed(1)}" font-size="${sub.toFixed(1)}">${Math.abs(l.ch)>1?Math.abs(l.ch):''}${l.ch>0?'+':'−'}</tspan>`:''}</text>`);
+  });
+  return `<svg class="mol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" width="${W.toFixed(0)}" height="${H.toFixed(0)}" font-family="${o.family||'JUZ40, system-ui, sans-serif'}" role="img" aria-label="${esc(g.s)}">${parts.join('')}</svg>`;
+}
+/* simple clash relief: mirror subtrees across single non-ring bonds when atoms collide */
+function clashes(g,P){let c=0;const n=P.length;for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){const d=Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1]);if(d<0.62&&!g.nb[i].some(e=>e.to===j))c+=(0.62-d)*10+1}return c}
+function untangle(g,P){
+  let base=clashes(g,P);if(!base)return;
+  const ringB=new Set();(g.rings||[]).forEach(r=>{for(let k=0;k<r.length;k++){const a=r[k],b=r[(k+1)%r.length];ringB.add(Math.min(a,b)+'-'+Math.max(a,b))}});
+  for(let it=0;it<3&&base>0;it++){
+    for(const b of g.bonds){if(b.o!==1||ringB.has(Math.min(b.a,b.b)+'-'+Math.max(b.a,b.b)))continue;
+      // subtree on b side
+      const seen=new Set([b.a]);const q=[b.b];seen.add(b.b);const sub=[];while(q.length){const x=q.pop();sub.push(x);for(const e of g.nb[x])if(!seen.has(e.to)){seen.add(e.to);q.push(e.to)}}
+      if(sub.length>P.length/2+1)continue;
+      const A=P[b.a],B=P[b.b];const dx=B[0]-A[0],dy=B[1]-A[1],L2=dx*dx+dy*dy;
+      const save=sub.map(k=>P[k]);
+      sub.forEach(k=>{const p=P[k];const t=((p[0]-A[0])*dx+(p[1]-A[1])*dy)/L2;const fx=A[0]+t*dx,fy=A[1]+t*dy;P[k]=[2*fx-p[0],2*fy-p[1]]});
+      const c=clashes(g,P);if(c<base){base=c;if(!base)return}else sub.forEach((k,i)=>P[k]=save[i]);
+    }}
+}
+root.MOL={parse,formula,hill,hillTxt,mass,layout,svg,rings,clashes,AM};
+})(typeof window!=='undefined'?window:globalThis);
+
+/* ---------- Fischer & Haworth projections ---------- */
+(function(M){
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const COLF=t=>/^(H?O|OH|HO|O)/.test(t)?'#D8452F':/N/.test(t)?'#2F6BE0':/^P|PO/.test(t)?'#D9731F':'#0D1820';
+// group text with subscripts: CH2OH → CH<sub>2</sub>OH
+function gtxt(t,x,y,fs,anchor){const sub=fs*0.68;
+  const html=esc(t).replace(/(\d+)/g,`<tspan dy="${(fs*0.26).toFixed(1)}" font-size="${sub.toFixed(1)}">$1</tspan><tspan dy="${(-fs*0.26).toFixed(1)}">​</tspan>`).replace(/\^([+−-])/g,`<tspan dy="${(-fs*0.36).toFixed(1)}" font-size="${sub.toFixed(1)}">$1</tspan><tspan dy="${(fs*0.36).toFixed(1)}">​</tspan>`);
+  return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="${fs}" text-anchor="${anchor||'middle'}" font-weight="600" fill="${COLF(t)}">${html}</text>`}
+const tw=(t,fs)=>t.replace(/\d|\^/g,'').length*fs*0.6+t.replace(/\D/g,'').length*fs*0.42;
+/* spec: {top:'CHO', rows:[['H','OH'],['HO','H'],...], bot:'CH2OH', num:true, mark:[i...]} */
+M.fischer=function(sp,o={}){
+  const fs=o.font||15,dy=fs*2.3,arm=fs*2.6;const rows=sp.rows;const n=rows.length;
+  let wl=0,wr=0;rows.forEach(r=>{wl=Math.max(wl,tw(r[0],fs));wr=Math.max(wr,tw(r[1],fs))});
+  const cx=wl+arm+fs*0.6,W=cx+arm+wr+fs*0.6+(sp.num?fs:0),top=fs*1.2;const H=top+dy*(n+1)+fs*0.8;
+  const p=[];
+  p.push(gtxt(sp.top,cx,top+fs*0.35,fs));
+  for(let i=0;i<n;i++){const y=top+dy*(i+1);
+    p.push(`<line x1="${cx}" y1="${(y-dy+fs*0.7).toFixed(1)}" x2="${cx}" y2="${(i===n-1?y+dy-fs*0.75:y).toFixed(1)}" stroke="#0D1820" stroke-width="1.6"/>`);
+    if(i<n-1)p.push(`<line x1="${cx}" y1="${y.toFixed(1)}" x2="${cx}" y2="${(y+dy).toFixed(1)}" stroke="#0D1820" stroke-width="1.6"/>`);
+    const hl=sp.mark&&sp.mark.includes(i);
+    p.push(`<line x1="${(cx-arm).toFixed(1)}" y1="${y.toFixed(1)}" x2="${(cx+arm).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${hl?'#1B7DB0':'#0D1820'}" stroke-width="${hl?2.4:1.6}"/>`);
+    p.push(gtxt(rows[i][0],cx-arm-fs*0.3,y+fs*0.35,fs,'end'));p.push(gtxt(rows[i][1],cx+arm+fs*0.3,y+fs*0.35,fs,'start'));
+    if(sp.num)p.push(`<text x="${(W-fs*0.4).toFixed(1)}" y="${(y-fs*0.3).toFixed(1)}" font-size="${fs*0.7}" fill="#8A9AA6" text-anchor="end">${(sp.num===true?2:sp.num)+i}</text>`)}
+  p.push(gtxt(sp.bot,cx,top+dy*(n+1)+fs*0.35,fs));
+  return `<svg class="mol" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" width="${W.toFixed(0)}" height="${H.toFixed(0)}" font-family="JUZ40, system-ui, sans-serif">${p.join('')}</svg>`};
+/* Haworth: {n:6|5, up:[...], dn:[...]} — index 0 = C1 (anomeric, right), going C1→C2→C3→C4(→C5 for pyranose); last ring carbon (C5 / C4) gets up[last] (e.g. CH2OH) and dn[last] (H).
+   ring O drawn at back-right. Optional link:{at:i, dir:'dn'|'up'} draws a bond end without label (glycosidic). */
+M.haworth=function(sp,o={}){
+  const fs=o.font||14,s=o.scale||1;const n=sp.n||6;
+  // ring coordinates (pyranose): C1 right, C2 front-right, C3 front-left, C4 left, C5 back-left, O back-right
+  const P6=[[160,62],[120,98],[44,98],[4,62],[44,26],[120,26]];const P5=[[146,62],[116,100],[52,100],[22,62],[84,28]];
+  const R=(n===6?P6:P5).map(p=>[p[0]*s*fs/14+fs*4,p[1]*s*fs/14+fs*2.4]);
+  const nC=n===6?5:4;const ringO=R[n-1];
+  const p=[];const bond=(a,b,w)=>p.push(`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="#0D1820" stroke-width="${w||1.6}" stroke-linecap="round"/>`);
+  // ring bonds; front bonds bold
+  const ring=[];for(let i=0;i<nC;i++)ring.push(R[i]);ring.push(ringO);
+  for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length];const front=(n===6?[0,1,2]:[0,1,2]).includes(i);
+    // shorten at O
+    let A=a,B=b;const isO=j=>ring[j]===ringO;
+    const sh=(P,Q,d)=>{const L=Math.hypot(Q[0]-P[0],Q[1]-P[1]);return [P[0]+(Q[0]-P[0])*d/L,P[1]+(Q[1]-P[1])*d/L]};
+    if(isO(i))A=sh(a,b,fs*0.55);if(isO((i+1)%ring.length))B=sh(b,a,fs*0.55);
+    bond(A,B,front?3.6:1.6)}
+  p.push(`<text x="${ringO[0].toFixed(1)}" y="${(ringO[1]+fs*0.35).toFixed(1)}" font-size="${fs}" text-anchor="middle" font-weight="600" fill="#D8452F">O</text>`);
+  const vl=fs*2.1;
+  for(let i=0;i<nC;i++){const c=R[i];const u=sp.up[i],d=sp.dn[i];
+    if(u!=null&&u!==''){bond(c,[c[0],c[1]-vl]);if(u!=='—')p.push(gtxt(u,c[0],c[1]-vl-fs*0.25,fs))}
+    if(d!=null&&d!==''){if(n===6&&i===nC-1){/* C-5 down substituent (H) is implied, not drawn */}
+      else{bond(c,[c[0],c[1]+vl]);if(d!=='—')p.push(gtxt(d,c[0],c[1]+vl+fs*0.95,fs))}}
+    if(sp.num)p.push(`<text x="${(c[0]+(i===0?fs*0.5:i===nC-1?-fs*0.9:fs*0.35)).toFixed(1)}" y="${(c[1]+(i===0||i===nC-1?fs*0.35:-fs*0.25)).toFixed(1)}" font-size="${fs*0.62}" fill="#8A9AA6">${i+1}</text>`)}
+  let x0=1e9,x1=-1e9;R.forEach(q=>{x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0])});
+  const W=x1+fs*3.2,H=R[1][1]+vl+fs*1.6;
+  return `<svg class="mol" xmlns="http://www.w3.org/2000/svg" viewBox="${(x0-fs*3).toFixed(0)} 0 ${(W-x0+fs*3).toFixed(0)} ${H.toFixed(0)}" width="${(W-x0+fs*3).toFixed(0)}" height="${H.toFixed(0)}" font-family="JUZ40, system-ui, sans-serif">${p.join('')}</svg>`};
+})(MOL);
+
 /* ===== Медициналық химия | Органика: тақырыптар (силлабус, 10–18) ===== */
 const ORG_SITE={title:'Медициналық химия | Органика',src:'Дереккөз: силлабус, Тюкавкина Н.А. т.б. «Биоорганикалық химия»'};
 const F=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
@@ -3730,6 +4074,120 @@ MODS.o18.tests.bekitu=[
 ];
 })();
 
+/* ===== ОСӨЖ (8-сабақ) — 10-тақырып: тапсырмалар, дәптердегі жауаптар тексеріліп, түзетілген ===== */
+(()=>{
+const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`;
+const T=(head,rows)=>`<div class="tbl-wrap"><table class="tt"><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const A=(q,say,e)=>({q,o:[],ans:[],say,e,lbl:'Жауабы',tag:'ОСӨЖ · 8-сабақ',sayLbl:'✓ Дұрыс жауабы',eLbl:'Тексеру және түсіндірме'});
+const ok='<b style="color:#16875A">✓ Дұрыс.</b> ',fix='<b style="color:#C93545">⚠ Түзету:</b> ',add='<b style="color:#1B7DB0">＋ Толықтыру:</b> ';
+const box='box-sizing:border-box;min-width:0;display:inline-flex;flex-direction:column;align-items:center;gap:4px;margin:6px 10px 6px 0;padding:10px 12px;background:#fff;border:1px solid #DCE7EE;border-radius:14px;vertical-align:top;max-width:100%';
+const M=(s,cap,o)=>`<span style="${box}">${MOL.svg(s,Object.assign({full:true,bond:30,font:15},o||{})).replace('<svg ','<svg style="max-width:100%;height:auto;display:block" ')}${cap?`<small style="font-size:13.5px;color:#34444F;text-align:center;max-width:260px;line-height:1.35">${cap}</small>`:''}</span>`;
+const SK=(s,cap)=>M(s,cap,{full:false,bond:28});
+const CS=(s,l)=>`<span style="display:inline-flex;align-items:flex-start;gap:6px;margin:4px 14px 4px 0"><b>${l}</b>${M(s,'',{full:true,bond:30})}</span>`;
+const row=x=>`<div style="display:flex;flex-wrap:wrap;align-items:flex-start">${x}</div>`;
+const eq=t=>`<span class="fx" style="display:block;margin:6px 0">${t}</span>`;
+const ar=(c)=>` <span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:12px;color:#1B7DB0;line-height:1.1">${c||'&nbsp;'}<span style="font-size:18px;color:#0D1820">⟶</span></span> `;
+const eqr=(c)=>` <span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-size:12px;color:#1B7DB0;line-height:1.1">${c||'&nbsp;'}<span style="font-size:18px;color:#0D1820">⇄</span></span> `;
+
+const P=[
+/* ---------- 1 ---------- */
+A(CS('[C][C][C][C]([C])[C]([C])[C]','а)'),
+row(M('CCCC(C)C(C)C','CH'+B(3)+'–CH'+B(2)+'–CH'+B(2)+'–CH(CH'+B(3)+')–CH(CH'+B(3)+')–CH'+B(3)))+'<b>2,3-диметилгексан</b> (C'+B(8)+'H'+B(18)+')',
+ok+'Ең ұзын тізбек 6 көміртектен тұрады (гексан). Нөмірлеу орынбасарға жақын шеттен басталады, сондықтан метил топтары 2- және 3-көміртекте тұр. 3,4-диметилгексан деп нөмірлеу қате, себебі локанттар жиыны үлкен болып шығады.'),
+A(CS('[C][C][C]([C])([C][C][C])[C][C]','б)'),
+row(M('CCC(C)(CCC)CC','CH'+B(3)+'–CH'+B(2)+'–C(CH'+B(3)+')(C'+B(2)+'H'+B(5)+')–CH'+B(2)+'–CH'+B(2)+'–CH'+B(3)))+'<b>3-метил-3-этилгексан</b> (C'+B(9)+'H'+B(20)+')',
+ok+'Негізгі тізбек: пропил + орталық C + этил = 6 көміртек (гексан). 3-көміртекте екі орынбасар бар: метил және этил.<br>'+fix+'атауды бір сөзбен, дефиспен жазу керек: «3-метил, 3-этил гексан» емес, <b>3-метил-3-этилгексан</b>. Орынбасарлар алфавит бойынша орналасады: <b>м</b>етил → <b>э</b>тил (кітап, 22–24-беттер).'),
+A(CS('[C]=[C]([C][C])[C]([C])[C][C]','в)'),
+row(M('C=C(CC)C(C)CC','CH'+B(2)+'=C(C'+B(2)+'H'+B(5)+')–CH(CH'+B(3)+')–CH'+B(2)+'–CH'+B(3)))+'<b>3-метил-2-этилпентен-1</b> (3-метил-2-этилпент-1-ен, C'+B(8)+'H'+B(16)+')',
+ok+'Негізгі тізбек қос байланысты қамтуы керек: CH'+B(2)+'=C–CH–CH'+B(2)+'–CH'+B(3)+', яғни 5 көміртек (пентен). Нөмірлеу қос байланысқа жақын шеттен басталады: қос байланыс C1=C2, этил C2-де, метил C3-те. Дәптердегі құрылым мен нөмірлеу дұрыс.<br>'+fix+'орынбасарлар алфавит бойынша жазылады: «2-этил, 3-метил пентен-1» емес, <b>3-метил-2-этилпентен-1</b>.'),
+A(`<span style="display:inline-flex;align-items:flex-start;gap:6px;margin:4px 14px 4px 0"><b>г)</b>${SK('CC(C)C1=CC=CC(C)=C1','')}</span>`,
+row(SK('CC(C)C1=CC=CC(C)=C1','1-изопропил-3-метилбензол'))+'<b>1-изопропил-3-метилбензол</b> (м-изопропилтолуол, C'+B(10)+'H'+B(14)+')',
+fix+'дәптерде «2-изопропил-4-метилбензол» деп жазылған. Бұл қате, себебі бензол сақинасындағы нөмірлеу міндетті түрде 1-ден басталады және локанттар ең кіші болуы керек. Орынбасарлар өзара мета-күйде (1,3) тұр. Алфавит бойынша бірінші орынбасарға (<b>и</b>зопропил) 1-локант беріледі, сондықтан дұрыс атауы <b>1-изопропил-3-метилбензол</b>.'),
+/* ---------- 2 ---------- */
+A('<b>2. Қосылыстағы біріншілік (1°), екіншілік (2°), үшіншілік (3°) және төртіншілік (4°) көміртек атомдарын көрсетіңіз:</b> CH'+B(3)+'–CH'+B(2)+'–CH(CH'+B(2)+'CH'+B(3)+')–CH(CH'+B(3)+')–CH'+B(3),
+row(M('CCC(CC)C(C)C','2-метил-3-этилпентан'))+
+T(['Түрі','Анықтамасы','Саны','Қайсылары'],[
+['1°','бір ғана C атомымен байланысқан','<b>4</b>','барлық CH'+B(3)+' топтары'],
+['2°','екі C атомымен байланысқан','<b>2</b>','негізгі тізбектегі CH'+B(2)+' және этил тобының CH'+B(2)],
+['3°','үш C атомымен байланысқан','<b>2</b>','екі CH тобы'],
+['4°','төрт C атомымен байланысқан','<b>0</b>','жоқ']]),
+ok+'Дәптердегі жауап дұрыс: 1° — 4, 2° — 2, 3° — 2, 4° — 0. Барлығы 8 көміртек (C'+B(8)+'H'+B(18)+').<br>'+add+'қосылыстың атауы — <b>2-метил-3-этилпентан</b>. Төртіншілік көміртек болу үшін атомның сутегі болмауы керек, мысалы, 1-тапсырманың б) бөліміндегі орталық C атомы.'),
+/* ---------- 3 ---------- */
+A('<b>3. Келтірілген радикалдардың құрылымдық формулаларын жазыңыз:</b> 1) пропил; 2) изопропил; 3) екіншілік-бутил; 4) үшіншілік-бутил; 5) фенил; 6) винил; 7) пара-толил',
+T(['Радикал','Құрылымдық формуласы','Қысқаша'],[
+['1) пропил','CH'+B(3)+'–CH'+B(2)+'–CH'+B(2)+'–','C'+B(3)+'H'+B(7)+'–'],
+['2) изопропил','CH'+B(3)+'–CH(CH'+B(3)+')–','(CH'+B(3)+')'+B(2)+'CH–'],
+['3) екіншілік-бутил','CH'+B(3)+'–CH'+B(2)+'–CH(CH'+B(3)+')–','C'+B(2)+'H'+B(5)+'CH(CH'+B(3)+')–'],
+['4) үшіншілік-бутил','CH'+B(3)+'–C(CH'+B(3)+')'+B(2)+'–','(CH'+B(3)+')'+B(3)+'C–'],
+['5) фенил','C'+B(6)+'H'+B(5)+'– (бензол сақинасы, бір H орнында бос валенттілік)','C'+B(6)+'H'+B(5)+'–'],
+['6) винил','CH'+B(2)+'=CH–','C'+B(2)+'H'+B(3)+'–'],
+['7) пара-толил','CH'+B(3)+'–C'+B(6)+'H'+B(4)+'– (CH'+B(3)+' мен бос валенттілік 1,4-күйде)','п-CH'+B(3)+'C'+B(6)+'H'+B(4)+'–']])+
+row(SK('C1=CC=CC=C1','бензол → фенил C₆H₅–')+SK('CC1=CC=CC=C1','толуол → п-толил'))+'',
+ok+'Барлық радикал дұрыс жазылған.<br>'+fix+'дәптерде пропил «C'+B(3)+'H'+B(7)+' – CH'+B(2)+'–CH'+B(2)+'–CH'+B(3)+'» деп жазылған. Сызықша бос валенттілікті білдіреді, сондықтан дұрысы: <b>–CH'+B(2)+'–CH'+B(2)+'–CH'+B(3)+'</b> (= C'+B(3)+'H'+B(7)+'–).'),
+/* ---------- 4 ---------- */
+A('<b>4. Келесі қосылыстар жұптары болып табылады:</b> 1) бірдей; 2) құрылымдық изомерлер; 3) изомер болып табылмайтын, әртүрлі қосылыстар; 4) кеңістіктік (геометриялық) изомерлер<br>'+
+row(M('CC(C)CC','а) 2-метилбутан')+M('CC(C)(C)C','2,2-диметилпропан'))+
+row(M('CC(C)CC','б) 2-метилбутан')+M('CCCCC','пентан'))+
+row(SK('C([H])(C)=C([H])C','в) цис-бутен-2')+SK('C=CCC','бутен-1')),
+T(['Жұп','Молекулалық формула','Жауабы'],[
+['а) 2-метилбутан / 2,2-диметилпропан','C'+B(5)+'H'+B(12)+' / C'+B(5)+'H'+B(12),'<b>2) құрылымдық изомерлер</b> (көміртек қаңқасының изомериясы)'],
+['б) 2-метилбутан / пентан','C'+B(5)+'H'+B(12)+' / C'+B(5)+'H'+B(12),'<b>2) құрылымдық изомерлер</b> (тармақталған және тармақталмаған тізбек)'],
+['в) цис-бутен-2 / бутен-1','C'+B(4)+'H'+B(8)+' / C'+B(4)+'H'+B(8),'<b>2) құрылымдық изомерлер</b> (қос байланыс орнының изомериясы)']])+
+'Сонымен: 1) бірдей — жоқ; <b>2) құрылымдық изомерлер — а, б, в</b>; 3) әртүрлі қосылыстар — жоқ; 4) кеңістіктік изомерлер — жоқ.',
+'Дәптерде а) құрылымдық изомерлер деп дұрыс белгіленген.<br>'+fix+'<b>б)</b> «бірдей» емес. Екінші формула — тармақталмаған <b>пентан</b> CH'+B(3)+'–CH'+B(2)+'–CH'+B(2)+'–CH'+B(2)+'–CH'+B(3)+', ал біріншісі — тармақталған 2-метилбутан. Құрамы бірдей (C'+B(5)+'H'+B(12)+'), құрылысы әртүрлі, сондықтан бұлар құрылымдық изомерлер.<br>'+fix+'<b>в)</b> «изомер емес» деген жауап қате. Екеуінің де формуласы C'+B(4)+'H'+B(8)+': біріншісі цис-бутен-2 (CH'+B(3)+'–CH=CH–CH'+B(3)+'), екіншісі бутен-1 (CH'+B(2)+'=CH–CH'+B(2)+'–CH'+B(3)+'). Қос байланыстың орны әртүрлі, сондықтан бұлар құрылымдық изомерлер. Цис-бутен-2-нің геометриялық изомері тек транс-бутен-2 болар еді.'),
+/* ---------- 5 ---------- */
+A('<b>5. Қосылыстарды ИЮПАК жүйелік орынбасу номенклатурасы бойынша атаңыз.</b><br>а) CH'+B(3)+'–CH(CH'+B(2)+'CH'+B(3)+')–CH'+B(2)+'–CH=CH'+B(2)+'&nbsp;&nbsp; б) CH'+B(3)+'–CH(CH'+B(3)+')–CH(C'+B(6)+'H'+B(5)+')–CH'+B(3)+'&nbsp;&nbsp; в) (CH'+B(3)+')'+B(3)+'C–OH&nbsp;&nbsp; г) HO–CH'+B(2)+'–CH'+B(2)+'–NH'+B(2),
+row(M('C=CCC(C)CC','а) 4-метилгексен-1')+SK('CC(C)C(C)C1=CC=CC=C1','б) (1,2-диметилпропил)бензол')+M('CC(C)(C)O','в) 2-метилпропанол-2')+M('OCCN','г) 2-аминоэтанол'))+
+T(['','Атауы','Ескерту'],[
+['а)','<b>4-метилгексен-1</b> (4-метилгекс-1-ен)','тізбек CH'+B(2)+'= шетінен нөмірленеді, этил тобы негізгі тізбекке кіреді'],
+['б)','<b>(1,2-диметилпропил)бензол</b>','басқаша: 2-метил-3-фенилбутан'],
+['в)','<b>2-метилпропанол-2</b> (2-метилпропан-2-ол)','үшіншілік бутил спирті'],
+['г)','<b>2-аминоэтанол</b>','тривиалды атауы — коламин (этаноламин)']]),
+ok+'а), б), в) дұрыс.<br>'+fix+'<b>г)</b> «этаноламин» — тривиалды атау. Орынбасу номенклатурасында ең үлкен сипаттаушы топ OH болады, ол «-ол» жұрнағымен беріледі, ал NH'+B(2)+' «амино-» префиксімен аталады: <b>2-аминоэтанол</b>. Кітапта коламин деп аталады (кітап, 20, 162-беттер). Формуланы <b>HO</b>–CH'+B(2)+'–… деп жазған дұрыс, «OH–CH'+B(2)+'» деп емес.'),
+/* ---------- 6 ---------- */
+A('<b>6. Келесі реакцияларды аяқтап жазыңыз және түзілген өнімдерді атаңыз.</b><br>1) CH'+B(3)+'CH'+B(2)+'SH + NaOH (тұз түзу реакциясы)',
+eq('CH'+B(3)+'CH'+B(2)+'SH + NaOH'+ar()+'CH'+B(3)+'CH'+B(2)+'SNa + H'+B(2)+'O')+'Өнімі: <b>натрий этантиоляты</b> (натрий этилтиоляты)',
+ok+'Тиолдар спирттерден күшті қышқыл (pK'+B('a')+' ≈ 10–11), сондықтан сілтілермен тұз (тиолят) түзеді. Спирттер NaOH-пен бұлай әрекеттеспейді (кітап, 85-бет).'),
+A('2) C'+B(6)+'H'+B(5)+'NH'+B(2)+' + HCl (тұз түзу реакциясы)',
+eq('C'+B(6)+'H'+B(5)+'NH'+B(2)+' + HCl'+ar()+'[C'+B(6)+'H'+B(5)+'NH'+B(3)+']'+S('+')+'Cl'+S('−'))+'Өнімі: <b>фениламмоний хлориді</b> (анилин гидрохлориді)',
+ok+'Азоттың бөлінбеген электрон жұбы H'+S('+')+' протонын қосып алады, сөйтіп аммоний тұзы түзіледі.<br>'+fix+'«анилин хлориді» емес, <b>фениламмоний хлориді</b> немесе анилин гидрохлориді.'),
+A('3) CH'+B(3)+'OH (тотығу)',
+eq('CH'+B(3)+'OH + [O]'+ar('Cu, t°')+'H–CHO + H'+B(2)+'O')+'Өнімі: <b>метаналь</b> (формальдегид, құмырсқа альдегиді)',
+ok+'Біріншілік спирт альдегидке дейін тотығады.<br>'+fix+'теңдеуде тотықтырғыш [O] мен су H'+B(2)+'O жазылмаған. Формальдегидтің формуласын <b>HCHO</b> (H–CH=O) деп жазған дұрыс.'),
+A('4) CH'+B(3)+'CH'+B(2)+'–S–S–CH'+B(2)+'CH'+B(3)+' (тотықсыздану)',
+eq('C'+B(2)+'H'+B(5)+'–S–S–C'+B(2)+'H'+B(5)+' + 2[H]'+ar()+'2C'+B(2)+'H'+B(5)+'SH')+'Өнімі: <b>этантиол</b> (2 моль)',
+ok+'Дисульфидтік байланыс тотықсызданғанда екі тиол түзіледі. Бұл тиолдардың тотығып дисульфид түзуіне кері процесс (2RSH ⇄ RSSR, кітап, 94-бет).<br>'+fix+'сол жақта тотықсыздандырғыш <b>2[H]</b> жазылуы керек, онсыз теңдеу теңестірілмейді.'),
+A('5) CH'+B(3)+'CH'+B(2)+'OH + CH'+B(3)+'OH (жай эфир түзу реакциясы, H'+S('+')+')',
+eq('C'+B(2)+'H'+B(5)+'OH + CH'+B(3)+'OH'+ar('H'+S('+')+', t°')+'C'+B(2)+'H'+B(5)+'–O–CH'+B(3)+' + H'+B(2)+'O')+'Өнімі: <b>метоксиэтан</b> (метилэтил эфирі)',
+ok+'Спирттердің молекулааралық дегидратациясы жүреді.<br>'+add+'екі түрлі спирт қоспасынан аралас эфирмен бірге диэтил эфирі мен диметил эфирі де түзіледі (кітап, 93-бет).'),
+A('6) CH'+B(3)+'OH + CH'+B(3)+'COOH (этерификация, H'+S('+')+')',
+eq('CH'+B(3)+'COOH + CH'+B(3)+'OH'+eqr('H'+S('+'))+'CH'+B(3)+'COOCH'+B(3)+' + H'+B(2)+'O')+'Өнімі: <b>метилацетат</b> (сірке қышқылының метил эфирі)',
+ok+'Өнім мен атауы дұрыс.<br>'+add+'этерификация — қайтымды реакция, сондықтан ⇄ белгісі қойылады.'),
+A('7) HO–CH'+B(2)+'CH'+B(2)+'–OH + Cu(OH)'+B(2)+' (суықта)',
+eq('2HO–CH'+B(2)+'–CH'+B(2)+'–OH + Cu(OH)'+B(2)+' + 2NaOH'+ar()+'Na'+B(2)+'[Cu(OCH'+B(2)+'CH'+B(2)+'O)'+B(2)+'] + 4H'+B(2)+'O')+'Өнімі: <b>мыс(II) гликоляты</b>, ашық көк түсті хелатты комплекс',
+fix+'дәптердегі «→ 2HCOH + Cu'+B(2)+'O + 3H'+B(2)+'O» жауабы <b>қате</b>. Cu'+B(2)+'O (қызыл тұнба) альдегидтерді қыздырғанда түзіледі. Суықта этиленгликоль тотықпайды. Көрші көміртек атомдарында OH топтары бар көпатомды спирттер сілтілік ортада Cu(OH)'+B(2)+'-мен ерітіндісі ашық көк түсті хелатты комплекс түзеді. Бұл диолдар мен глицериннің сапалық реакциясы (кітап, 149-бет).'),
+A('8) CH'+B(3)+'NH'+B(2)+' + HNO'+B(2)+' (дезаминдеу)',
+eq('CH'+B(3)+'NH'+B(2)+' + HNO'+B(2)+ar()+'CH'+B(3)+'OH + N'+B(2)+'↑ + H'+B(2)+'O')+'Өнімі: <b>метанол</b>, азот бөлінеді',
+ok+'Біріншілік аминнің NH'+B(2)+' тобы OH тобына алмасады, N'+B(2)+' газы бөлінеді (кітап, 91-бет).<br>'+add+'өнімдердің атауы жазылмаған: метанол, азот, су.'),
+A('9) CH'+B(3)+'NH'+B(2)+' + CH'+B(3)+'I (алкилдеу)',
+eq('CH'+B(3)+'NH'+B(2)+' + CH'+B(3)+'I'+ar()+'[(CH'+B(3)+')'+B(2)+'NH'+B(2)+']'+S('+')+'I'+S('−'))+'Өнімі: <b>диметиламмоний иодиді</b>. Негізбен өңдегенде бос <b>диметиламин</b> (CH'+B(3)+')'+B(2)+'NH бөлінеді.',
+ok+'Алкилдеу нәтижесінде біріншілік аминнен екіншілік амин түзіледі, өнім дұрыс анықталған.<br>'+fix+'«(CH'+B(3)+')'+B(2)+'NH + HI» деп жазу толық дәл емес: бөлінген HI аминмен бірден тұз түзеді. Алкилдеудің бірінші өнімі аммоний тұзы болады (кітап, 91-бет).'),
+A('10) CH'+B(3)+'CH'+B(2)+'NH'+B(2)+' + (CH'+B(3)+'CO)'+B(2)+'O (ацилдеу)',
+eq('CH'+B(3)+'CH'+B(2)+'NH'+B(2)+' + (CH'+B(3)+'CO)'+B(2)+'O'+ar()+'CH'+B(3)+'CO–NH–CH'+B(2)+'CH'+B(3)+' + CH'+B(3)+'COOH')+row(SK('CC(=O)NCC','N-этилацетамид'))+'Өнімдері: <b>N-этилацетамид</b> және сірке қышқылы',
+add+'бұл реакция дәптерде <b>жазылмаған</b>. Аминдер ангидридтермен ацилденіп, N-алмасқан амидтер түзеді. Ангидридтің екінші ацил бөлігі сірке қышқылы ретінде бөлінеді (кітап, 122-бет).')
+];
+const L=['а)','б)','в)','г)'];
+const G=(head,parts,lab)=>A(head+(lab?`<div style="display:flex;flex-wrap:wrap;align-items:flex-start">${parts.map(p=>p.q).join('')}</div>`:parts.map(p=>`<div style="margin-top:4px">${p.q}</div>`).join('')),
+  parts.map((p,i)=>`<div style="margin:6px 0 10px"><b style="color:#1B7DB0">${lab?L[i]:(i+1)+')'}</b> ${p.say}</div>`).join(''),
+  parts.map((p,i)=>`<div style="margin:6px 0 10px"><b style="color:#1B7DB0">${lab?L[i]:(i+1)+')'}</b> ${p.e}</div>`).join(''));
+P[8].q=P[8].q.replace(/^<b>6\. [^<]*<\/b><br>/,'');
+document.head.insertAdjacentHTML('beforeend','<'+'style>.qcard{min-width:0;max-width:100%}.qcard .qtext,.qcard .rv-a,.qcard div{min-width:0}.qcard .fx{overflow-x:auto;max-width:100%;white-space:normal}</'+'style>');
+MODS.o10.osoj=[
+ G('<b>1. Берілген қосылыстарды сутек атомдарымен толықтырыңыз және жүйелік номенклатура бойынша атаңыз.</b>',P.slice(0,4),1),
+ P[4],P[5],P[6],P[7],
+ G('<b>6. Келесі реакцияларды аяқтап жазыңыз және түзілген өнімдерді атаңыз.</b>',P.slice(8,18),0)];
+})();
+
 </script>
 
 <script>
@@ -4061,12 +4519,12 @@ const UI_TICO=[
  '<path d="M12 4c-3 4-5 6.5-5 9a5 5 0 0 0 10 0c0-2.5-2-5-5-9z"/><path d="M3 20h18"/>',
  '<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="6.5" stroke-dasharray="2 2.6"/><circle cx="12" cy="12" r="9.5"/>',
  '<path d="M4 9h13l-3-3M20 15H7l3 3"/>'];
-const UI_SHORT={t01:'Биогенді элементтер',t02:'Химиялық термодинамика',t03:'Реакция жылдамдығы',t04:'Ерітінділер және осмос',t05:'Протолиттік тепе-теңдік',t06:'Беттік құбылыстар',t07:'Дисперстік жүйелер',t08:'Тотығу-тотықсыздану'};
+const UI_SHORT={t01:'Биогенді элементтер',t02:'Химиялық термодинамика',t03:'Реакция жылдамдығы',t04:'Ерітінділер және осмос',t05:'Протолиттік тепе-теңдік',t06:'Беттік құбылыстар',t07:'Дисперстік жүйелер',t08:'Тотығу-тотықсыздану',o10:'Органикаға кіріспе: спирттер, фенолдар, тиолдар, аминдер',o11:'Альдегидтер, кетондар, карбон қышқылдары',o12:'Амин қышқылдары, пептидтер, ақуыздар',o13:'Көмірсулар: моносахаридтер',o14:'Көмірсулар: ди- және полисахаридтер',o15:'Липидтер',o16:'Гетероциклдер және нуклеин қышқылдары',o18:'Тізбекті реакциялар'};
 const uiShort=t=>UI_SHORT[t.id]||t.title;
 const UI_TCOL=[['#FFE9E3','#E8664A'],['#E6F0FF','#2F6BE0'],['#FFF3D9','#C98A06'],['#E2F6EF','#1F9D74'],['#EFE8FF','#7A55E0'],['#E3F5FB','#1A93BF'],['#FDE7F1','#D24C8B'],['#E4F4FC','#3B5BD6']];
-const UI_TAG={notes:TAB_ICO.notes,cards:TAB_ICO.cards,test:TAB_ICO.test,prob:TAB_ICO.prob,lab:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'};
+const UI_TAG={osoj:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9zM9 11h6M9 15h4"/>',notes:TAB_ICO.notes,cards:TAB_ICO.cards,test:TAB_ICO.test,prob:TAB_ICO.prob,lab:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'};
 if(!TABS.some(t=>t[0]==='lab'))TABS.push(['lab','Зертхана']);
-const UI_TABS=[['notes','Конспект'],['cards','Карталар'],['test','Тест'],['prob','Есептер'],['lab','Зертхана']];
+const UI_TABS=[['notes','Конспект'],['cards','Карталар'],['test','Тест'],['prob','Есептер'],['lab','Зертхана'],['osoj','ОСӨЖ']];
 const UI_NI={
  home:'<path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/>',
  topics:'<path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2zM4 19V5"/><path d="M8 7h6"/>',
@@ -4190,15 +4648,15 @@ function renderModule(id,tab,sub){
   const main=uiShell(act);
   if(!t||!m){main.append(h('div',{class:'in body'},h('div',{class:'empty',style:'margin-top:30px'},h('b',{},'Бұл тақырып әзірге дайын емес'),h('a',{href:'#home'},'Басты бетке оралу'))));return}
   const i=TOPICS.indexOf(t),no=t.no||i+1;
-  const cnt={notes:m.notes.length,cards:m.cards.length,test:uiTestCount(m),prob:m.problems.length,lab:labCount(id)};
+  const cnt={notes:m.notes.length,cards:m.cards.length,test:uiTestCount(m),prob:m.problems.length,lab:labCount(id),osoj:(m.osoj||[]).length};
   const [bg,fg]=UI_TCOL[i%UI_TCOL.length];
-  const TC=['#2F6BE0','#1F9D74','#7A55E0','#E8664A','#1A93BF'];
+  const TC=['#2F6BE0','#1F9D74','#7A55E0','#E8664A','#1A93BF','#D24C8B'];
   main.append(uiHero({cls:'topic',
     crumb:h('span',{},h('a',{href:'#all_notes',html:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Тақырыптар'}),h('i',{},'/'),h('span',{},uiShort(t))),
     eyebrow:'MedPazyl · '+no+'-тақырып',title:uiShort(t),full:t.title,
     stats:[[cnt.notes,'бөлім'],[cnt.cards,'карта'],[cnt.test,'тест'],[cnt.prob,'есеп']].filter(x=>x[0]),
     pic:uiTilt({eyebrow:ORG?'Органика':'Медициналық химия',icon:UI_TICO[i%UI_TICO.length],bg,fg,title:uiShort(t),foot:no+'-тақырып'}),
-    tabs:UI_TABS.map(([k,l],q)=>[l,'#'+id+'_'+k,k===tab,cnt[k]||null,UI_TAG[k],TC[q]])}));
+    tabs:UI_TABS.map(([k,l],q)=>[l,'#'+id+'_'+k,k===tab,cnt[k]||null,UI_TAG[k],TC[q]]).filter((x,q)=>UI_TABS[q][0]!=='osoj'||cnt.osoj)}));
   const body=h('div',{class:'in body tbody'+(tab==='notes'?' with-toc':'')});main.append(body);
   const panel=h('section',{class:'panel'});
   const next=(k,label)=>h('div',{class:'next-step'},h('a',{class:'btn blue',href:'#'+id+'_'+k},label+' →'));
@@ -4210,6 +4668,7 @@ function renderModule(id,tab,sub){
     if(tab==='cards'){renderCards(panel,m.cards,'cards_'+id);panel.append(next('test','Тестке өту'))}
     else if(tab==='test'){renderTests(panel,m,id,sub);uiTestIcons(panel)}
     else if(tab==='lab')uiLabHub(panel,id);
+    else if(tab==='osoj'&&m.osoj){panel.append(h('p',{class:'intro',html:'<b>ОСӨЖ — оқытушының басшылығымен орындалатын өзіндік жұмыс (8-сабақ).</b> Әр тапсырманың толық дұрыс жауабы берілген. Дәптердегі шешімдер тексерілген: дұрысы ✓ деп белгіленген, қателері түзетілген, жетіспейтін жауаптар толықтырылған.'}));const area=h('div');panel.append(area);renderReview(area,m.osoj)}
     else renderProblems(panel,m);
     uiDecorate(panel)}
   window.scrollTo({top:0})}
@@ -10623,7 +11082,7 @@ function route(){
   if(!unlocked){renderGate();return}
   if(!hs||hs==='home'){renderHome();window.scrollTo({top:0});return}
   const [id,tab,sub]=hs.split('_');
-  renderModule(id,TABS.some(t=>t[0]===tab)?tab:'notes',sub)}
+  renderModule(id,(TABS.some(t=>t[0]===tab)||tab==='osoj')?tab:'notes',sub)}
 addEventListener('hashchange',route);
 route();
 </script>
