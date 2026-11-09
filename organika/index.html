@@ -4808,7 +4808,7 @@ function renderTests(panel,m,id,sub){
     const card=(title,desc,count,href,dis)=>h('button',{class:'pickc',disabled:dis||null,onclick:()=>{location.hash=href}},h('b',{},title),h('span',{},desc),h('span',{class:'chip'+(dis?'':' on')},dis?'Жақында':count));
     g.append(card('Тақырыпты бекіту тесттері','Оқулықтағы өзін-өзі бақылау тесттері. Жауап беріп, бірден тексересіз.',sets.bekitu.length+' сұрақ',id+'_test_bekitu',!sets.bekitu.length));
     if(sets.tims.length)g.append(card('ТИМС тесттері','Тестілік интерактивті мониторинг жүйесінің сұрақтары.',sets.tims.length+' сұрақ',id+'_test_tims',!sets.tims.length));
-    if(Object.values(sets.variants).some(x=>x.length))g.append(card('Вариант бойынша тесттер','Тест тапсырылмайды: дайын жауаптары мен түсіндірмелері ашық тұрады.',(Object.values(sets.variants).filter(x=>x.length).length||4)+' вариант',id+'_test_var',false));
+    if(false)g.append(card('Вариант бойынша тесттер','Тест тапсырылмайды: дайын жауаптары мен түсіндірмелері ашық тұрады.',(Object.values(sets.variants).filter(x=>x.length).length||4)+' вариант',id+'_test_var',false));
     if(sets.prac)g.append(card('ТӘЖІРИБЕЛІК ТАПСЫРМАЛАР','Сабақтағы тәжірибелік тапсырмалардың толық жауаптары мен есептердің шешуі.',sets.prac.length+' тапсырма',id+'_test_prac',false));
     if(sets.osojAns)g.append(card('ОСӨЖ ЖАУАПТАРЫ','ОСӨЖ тапсырмаларының дайын шешімдері: дәптердегі жауаптар мәтінге аударылып, тексерілген, қателері түзетілген.',sets.osojAns.length+' тапсырма',id+'_test_osojans',false));
     if(sets.osoj)g.append(card('ОСӨЖ ЖӘНЕ СӨЖ ТАПСЫРМАЛАРЫ','Оқытушының басшылығымен орындалатын өзіндік жұмыс (ОСӨЖ) және СӨЖ тапсырмаларының толық жауаптары.',sets.osoj.length+' тапсырма',id+'_test_osoj',false));
@@ -4952,9 +4952,10 @@ const UI_TICO=[
 const UI_SHORT={t01:'Биогенді элементтер',t02:'Химиялық термодинамика',t03:'Реакция жылдамдығы',t04:'Ерітінділер және осмос',t05:'Протолиттік тепе-теңдік',t06:'Беттік құбылыстар',t07:'Дисперстік жүйелер',t08:'Тотығу-тотықсыздану',o10:'Органикаға кіріспе: спирттер, фенолдар, тиолдар, аминдер',o11:'Альдегидтер, кетондар, карбон қышқылдары',o12:'Амин қышқылдары, пептидтер, ақуыздар',o13:'Көмірсулар: моносахаридтер',o14:'Көмірсулар: ди- және полисахаридтер',o15:'Липидтер',o16:'Гетероциклдер және нуклеин қышқылдары',o18:'Тізбекті реакциялар'};
 const uiShort=t=>UI_SHORT[t.id]||t.title;
 const UI_TCOL=[['#FFE9E3','#E8664A'],['#E6F0FF','#2F6BE0'],['#FFF3D9','#C98A06'],['#E2F6EF','#1F9D74'],['#EFE8FF','#7A55E0'],['#E3F5FB','#1A93BF'],['#FDE7F1','#D24C8B'],['#E4F4FC','#3B5BD6']];
-const UI_TAG={osoj:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9zM9 11h6M9 15h4"/>',notes:TAB_ICO.notes,cards:TAB_ICO.cards,test:TAB_ICO.test,prob:TAB_ICO.prob,lab:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'};
+const UI_TAG={bilet:'<path d="M4 7a2 2 0 0 0 2-2h12a2 2 0 0 0 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0-2 2H6a2 2 0 0 0-2-2v-3a2 2 0 0 0 0-4z"/><path d="M9 9h6M9 12h6M9 15h4"/>',osoj:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2.5h6v3H9zM9 11h6M9 15h4"/>',notes:TAB_ICO.notes,cards:TAB_ICO.cards,test:TAB_ICO.test,prob:TAB_ICO.prob,lab:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>'};
 if(!TABS.some(t=>t[0]==='lab'))TABS.push(['lab','Зертхана']);
-const UI_TABS=[['notes','Конспект'],['cards','Карталар'],['test','Тест'],['prob','Есептер'],['lab','Зертхана'],['osoj','ОСӨЖ']];
+const UI_TABS=ORG?[['notes','Конспект'],['cards','Карталар'],['test','Тест'],['bilet','Билеттер'],['lab','Зертхана'],['osoj','ОСӨЖ']]:[['notes','Конспект'],['cards','Карталар'],['test','Тест'],['prob','Есептер'],['lab','Зертхана'],['osoj','ОСӨЖ']];
+const uiBilets=m=>{const v=(m.tests&&m.tests.variants)||{};return Object.keys(v).filter(n=>v[n]&&v[n].length).sort((a,b)=>parseFloat(a)-parseFloat(b))};
 const UI_NI={
  home:'<path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/>',
  topics:'<path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2zM4 19V5"/><path d="M8 7h6"/>',
@@ -4969,7 +4970,7 @@ const uiSvg=(path,cls)=>'<svg class="'+(cls||'')+'" viewBox="0 0 24 24" fill="no
 const uiTestCount=m=>{const s=m.tests||{};return (s.bekitu||[]).length};
 const uiArrow='<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const uiReady=()=>TOPICS.filter(t=>MODS[t.id]);
-const uiMeta=m=>[[m.notes.length,'бөлім'],[m.cards.length,'карта'],[uiTestCount(m),'тест'],[m.problems.length,'есеп']].filter(x=>x[0]).map(x=>x[0]+' '+x[1]).join(' · ');
+const uiMeta=m=>[[m.notes.length,'бөлім'],[m.cards.length,'карта'],[uiTestCount(m),'тест'],[ORG?0:m.problems.length,'есеп']].filter(x=>x[0]).map(x=>x[0]+' '+x[1]).join(' · ');
 
 /* ---------- қаңқа: сол жақ мәзір + мобиль жолақтар ---------- */
 function topbar(){return h('header',{class:'mtop'},
@@ -5073,13 +5074,15 @@ function renderHome(){
 function renderModule(id,tab,sub){
   if(id==='mar'){uiMarathon(sub);return}
   if(ORG&&id==='rub'){location.replace('#home');return}
+  if(ORG&&tab==='prob'){location.replace('#'+id+'_notes');return}
+  if(ORG&&tab==='test'&&sub&&(sub==='var'||/^v[\d.]+$/.test(sub))){location.replace('#'+id+'_bilet'+(sub==='var'?'':'_'+sub.slice(1)));return}
   if(id==='mix'||id==='rub'||id==='all'){uiSpecial(id,tab,sub);return}
   const t=TOPICS.find(x=>x.id===id),m=MODS[id];
   const act=tab==='cards'?'cards':tab==='test'?'test':tab==='lab'?'lab':'topics';
   const main=uiShell(act);
   if(!t||!m){main.append(h('div',{class:'in body'},h('div',{class:'empty',style:'margin-top:30px'},h('b',{},'Бұл тақырып әзірге дайын емес'),h('a',{href:'#home'},'Басты бетке оралу'))));return}
   const i=TOPICS.indexOf(t),no=t.no||i+1;
-  const cnt={notes:m.notes.length,cards:m.cards.length,test:uiTestCount(m),prob:m.problems.length,lab:labCount(id),osoj:(m.osoj||[]).length};
+  const cnt={notes:m.notes.length,cards:m.cards.length,test:uiTestCount(m),prob:ORG?0:m.problems.length,lab:labCount(id),osoj:(m.osoj||[]).length,bilet:uiBilets(m).length};
   const [bg,fg]=UI_TCOL[i%UI_TCOL.length];
   const TC=['#2F6BE0','#1F9D74','#7A55E0','#E8664A','#1A93BF','#D24C8B'];
   main.append(uiHero({cls:'topic',
@@ -5087,7 +5090,7 @@ function renderModule(id,tab,sub){
     eyebrow:'MedPazyl · '+no+'-тақырып',title:uiShort(t),full:t.title,
     stats:[[cnt.notes,'бөлім'],[cnt.cards,'карта'],[cnt.test,'тест'],[cnt.prob,'есеп']].filter(x=>x[0]),
     pic:uiTilt({eyebrow:ORG?'Органика':'Медициналық химия',icon:UI_TICO[i%UI_TICO.length],bg,fg,title:uiShort(t),foot:no+'-тақырып'}),
-    tabs:UI_TABS.map(([k,l],q)=>[l,'#'+id+'_'+k,k===tab,cnt[k]||null,UI_TAG[k],TC[q]]).filter((x,q)=>UI_TABS[q][0]!=='osoj'||cnt.osoj)}));
+    tabs:UI_TABS.map(([k,l],q)=>[l,'#'+id+'_'+k,k===tab,cnt[k]||null,UI_TAG[k],TC[q]]).filter((x,q)=>!['osoj','bilet'].includes(UI_TABS[q][0])||cnt[UI_TABS[q][0]])}));
   const body=h('div',{class:'in body tbody'+(tab==='notes'?' with-toc':'')});main.append(body);
   const panel=h('section',{class:'panel'});
   const next=(k,label)=>h('div',{class:'next-step'},h('a',{class:'btn blue',href:'#'+id+'_'+k},label+' →'));
@@ -5099,6 +5102,15 @@ function renderModule(id,tab,sub){
     if(tab==='cards'){renderCards(panel,m.cards,'cards_'+id);panel.append(next('test','Тестке өту'))}
     else if(tab==='test'){renderTests(panel,m,id,sub);uiTestIcons(panel)}
     else if(tab==='lab')uiLabHub(panel,id);
+    else if(tab==='bilet'){
+      const ks=uiBilets(m);
+      if(!ks.length){panel.append(h('div',{class:'empty'},h('b',{},'Билеттер әлі қосылмаған')))}
+      else{const cur=ks.includes(sub)?sub:ks[0];
+        panel.append(h('h2',{style:'font-size:20px;font-weight:800;margin-bottom:6px'},'Билеттер'),h('p',{class:'muted',style:'margin:0 0 4px'},'Билетті таңдаңыз. Әр сұрақтың дұрыс жауабы мен талдауы ашық тұрады.'));
+        const row=h('div',{class:'var-row'});
+        ks.forEach(n=>row.append(h('button',{class:'btn '+(n===cur?'':'ghost'),onclick:()=>{location.hash=id+'_bilet_'+n}},n+'-билет')));
+        panel.append(row);
+        const area=h('div');panel.append(area);renderReview(area,m.tests.variants[cur])}}
     else if(tab==='osoj'&&m.osoj){panel.append(h('p',{class:'intro',html:'<b>ОСӨЖ — оқытушының басшылығымен орындалатын өзіндік жұмыс (8-сабақ).</b> Әр тапсырманың толық дұрыс жауабы мен түсіндірмесі берілген.'}));const area=h('div');panel.append(area);renderReview(area,m.osoj)}
     else renderProblems(panel,m);
     uiDecorate(panel)}
@@ -11534,7 +11546,7 @@ function route(){
   if(!unlocked){renderGate();return}
   if(!hs||hs==='home'){renderHome();window.scrollTo({top:0});return}
   const [id,tab,sub]=hs.split('_');
-  renderModule(id,(TABS.some(t=>t[0]===tab)||tab==='osoj')?tab:'notes',sub)}
+  renderModule(id,(TABS.some(t=>t[0]===tab)||tab==='osoj'||tab==='bilet')?tab:'notes',sub)}
 addEventListener('hashchange',route);
 route();
 </script>
