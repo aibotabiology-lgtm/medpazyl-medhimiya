@@ -3022,7 +3022,14 @@ ${LH(`«<b>pH &lt; pI → плюс</b>»: ортада H<sup>+</sup> артық 
 <p><b>2) Пептидтің құрамы белгілі болса</b>, берілген pH-тағы ионданған топтардың зарядтарын қосамыз. pH 7-де: N-шеті –NH${B(3)}${S('+')} → <b>+1</b>; C-шеті –COO${S('−')} → <b>−1</b>; Асп, Глу радикалы –COO${S('−')} → <b>−1</b>; Лиз, Арг радикалы → <b>+1</b>; Гис (${PK} 6,0), Цис, Тир радикалдары pH 7-де іс жүзінде зарядсыз. Жалпы заряд теріс болса — пептидтің <b>ортасы қышқылдық</b> (pI &lt; 7), оң болса — <b>негіздік</b> (pI &gt; 7), нөлге тең болса — бейтарапқа жақын.</p>
 ${TB(['Пептид','Зарядтар (pH 7)','Жалпы заряды','Қорытынды'],[
 ['Глу-Ала-Лиз-Асп','+1 (N) −1 (Глу) +1 (Лиз) −1 (Асп) −1 (C)','<b>−1</b>','ортасы қышқылдық (pI &lt; 7); анион, анодқа жылжиды'],
-['Арг-Гли-Лиз','+1 (N) +1 (Арг) +1 (Лиз) −1 (C)','<b>+2</b>','ортасы негіздік (pI &gt; 7); катион, катодқа жылжиды']])}`}
+['Арг-Гли-Лиз','+1 (N) +1 (Арг) +1 (Лиз) −1 (C)','<b>+2</b>','ортасы негіздік (pI &gt; 7); катион, катодқа жылжиды']])}
+<h3>Пептидтің ИЭН-ін (pI) есептеу</h3>
+<p>Сабақта пептидтің ИЭН-і 3 қадаммен анықталады:</p>
+<ol><li><b>Заряд (pH 7):</b> ионогенді топтардың зарядтарын қосамыз (N-шеті +1, C-шеті −1, радикалдағы COOH −1, радикалдағы NH${B(2)} +1).</li>
+<li><b>Ортасы:</b> заряд теріс → ИЭН pH &lt; 7 (қышқылдық); заряд оң → ИЭН pH &gt; 7 (негіздік).</li>
+<li><b>ИЭН:</b> ионогенді топтардың p<i>K</i><sub>a</sub> мәндерінің орташасы — <b>pI = (p<i>K</i><sub>1</sub> + p<i>K</i><sub>2</sub> + p<i>K</i><sub>3</sub>) / 3</b>. N-шеті үшін бірінші амин қышқылының α-NH${B(3)}${S('+')} p<i>K</i><sub>a</sub>-сы, C-шеті үшін соңғы амин қышқылының α-COOH p<i>K</i><sub>a</sub>-сы, радикал үшін оның өз p<i>K</i><sub>a</sub>-сы алынады.</li></ol>
+<p><b>Мысал: Сер-Гли-Асп.</b> Ионогенді топтар: Сер α-NH${B(3)}${S('+')} (9,2), Асп α-COOH (2,1), Асп β-COOH (3,9). 1) Заряды: +1 − 1 − 1 = <b>−1</b>. 2) Ортасы — <b>қышқылдық</b>, pH &lt; 7. 3) pI = (9,2 + 2,1 + 3,9) / 3 ≈ <b>5,1</b>. Толық шешімі және тағы бір мысал (Лиз-Гли-Ала) — «Тапсырмалар» бөлімінде (14, 15-есептер).</p>
+<p class="note">Дәл есептеуде pI зарядсыз түрдің екі жағындағы p<i>K</i><sub>a</sub> мәндерінің орташасы ретінде табылады (Сер-Гли-Асп үшін (2,1 + 3,9)/2 = 3,0). Сабақтағы үш p<i>K</i><sub>a</sub>-ның орташасы — жуық әдіс; екі әдіс те ИЭН-нің қай аймақта жатқанын бірдей көрсетеді.</p>`}
  ],
  cards:[],
  problems:[]
@@ -3123,6 +3130,61 @@ const SM={Gly:'OC(=O)CN',Ala:'OC(=O)C(C)N',Val:'OC(=O)C(N)C(C)C',Leu:'OC(=O)C(N)
  Cys:'OC(=O)C(N)CS',Met:'OC(=O)C(N)CCSC',Pro:'OC(=O)C1CCCN1',Phe:'OC(=O)C(N)CC1=CC=CC=C1',Tyr:'OC(=O)C(N)CC1=CC=C(O)C=C1',Trp:'OC(=O)C(N)CC1=CNC2=CC=CC=C12',
  Asp:'OC(=O)C(N)CC(=O)O',Glu:'OC(=O)C(N)CCC(=O)O',Asn:'OC(=O)C(N)CC(N)=O',Gln:'OC(=O)C(N)CCC(N)=O',Lys:'OC(=O)C(N)CCCCN',Arg:'OC(=O)C(N)CCCNC(N)=N',His:'OC(=O)C(N)CC1=CNC=N1'};
 
+
+/* ---- 20 амин қышқылының «жаттауға ыңғайлы» формуласы: өзгермейтін бөлік H₂N–CH–COOH жоғарыда (көк), радикал CH-тан төмен қарай (қара) ---- */
+const KC='#1B7DB0',KR='#0D1820';
+const bar=`<span style="display:block;width:2px;height:13px;background:${KR};margin:3px auto"></span>`;
+/* row: «CH|–CH3» → ортада CH (байланыс осы атомнан), оң жағында –CH3 */
+const row=x=>{const [a,b]=x.split('|');return `<span style="position:relative;display:inline-block;line-height:1.15">${c(a)}${b?`<span style="position:absolute;left:100%;top:0;white-space:nowrap">${c(b)}</span>`:''}</span>`};
+/* сақиналар (қаңқалық формула): жоғарғы төбе — CH2-ге қосылатын атом, ол SVG-нің ортасында */
+const ringSVG=kind=>{
+ const b=30,P=(r,a)=>[r*Math.cos(a*Math.PI/180),-r*Math.sin(a*Math.PI/180)];
+ let V=[],E=[],D=[],lab=[],extra='';
+ const r5=b/(2*Math.sin(Math.PI/5));
+ if(kind==='Ph'||kind==='Tyr'){V=[90,30,-30,-90,-150,150].map(a=>P(b,a));E=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]];D=[[1,2],[3,4],[5,0]];
+  if(kind==='Tyr'){const[x,y]=V[3];V.push([x,y+19]);E.push([3,6]);lab.push([6,"OH",0,8])}}
+ if(kind==='Im'){V=[90,18,-54,-126,162].map(a=>P(r5,a));E=[[0,1],[1,2],[2,3],[3,4],[4,0]];D=[[0,1],[3,4]];
+  lab.push([4,'N'],[2,'N']);const[x,y]=V[2];V.push([x,y+28]);E.push([2,5]);lab.push([5,'H',0,6])}
+ if(kind==='Ind'){V=[90,18,-54,-126,162].map(a=>P(r5,a));E=[[0,1],[1,2],[2,3],[3,4],[4,0]];D=[[0,1]];
+  const A=V[4],B=V[3],mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2,cx5=0,cy5=0;let nx=mx-cx5,ny=my-cy5;const nl=Math.hypot(nx,ny);nx/=nl;ny/=nl;
+  const ap=b*Math.sqrt(3)/2,hc=[mx+nx*ap,my+ny*ap];
+  const ang=Math.atan2(A[1]-hc[1],A[0]-hc[0]),hv=[];for(let k=0;k<6;k++){const t=ang+k*Math.PI/3;hv.push([hc[0]+b*Math.cos(t),hc[1]+b*Math.sin(t)])}
+  /* hv[0]=C3a; бағыт тексеріледі: hv[5] немесе hv[1] C7a-ға тең болуы керек */
+  let seq=Math.hypot(hv[5][0]-B[0],hv[5][1]-B[1])<1?[0,1,2,3,4]:[0,5,4,3,2];
+  const i0=V.length;[1,2,3,4].forEach(k=>V.push(hv[seq[k]]));      /* C4,C5,C6,C7 */
+  E.push([4,i0],[i0,i0+1],[i0+1,i0+2],[i0+2,i0+3],[i0+3,3]);D.push([4,i0],[i0+1,i0+2],[i0+3,3]);
+  lab.push([2,'N']);const[x,y]=V[2];V.push([x,y+28]);E.push([2,V.length-1]);lab.push([V.length-1,'H',0,6]);
+  extra=hc}
+ const ap=V[0];const xs=V.map(v=>v[0]-ap[0]),ys=V.map(v=>v[1]-ap[1]);
+ const half=Math.max(...xs.map(Math.abs))+16,H=Math.max(...ys)+(kind==='Tyr'?22:14),W=2*half;
+ const T=([x,y])=>[x-ap[0]+half,y-ap[1]+1];
+ const cen=kind==='Ind'?null:[0,0];
+ const ln=(p,q,o)=>`<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="${KR}" stroke-width="${o||2}" stroke-linecap="round"/>`;
+ let out='';
+ const labelled=new Set(lab.map(l=>l[0]));
+ E.forEach(([i,j])=>{let p=T(V[i]),q=T(V[j]);const sh=(u,w)=>{const dx=w[0]-u[0],dy=w[1]-u[1],L=Math.hypot(dx,dy);return[u[0]+dx/L*10,u[1]+dy/L*10]};
+  if(labelled.has(i))p=sh(p,q);if(labelled.has(j))q=sh(q,p);out+=ln(p,q)});
+ D.forEach(([i,j])=>{/* ішкі сызық сақина центріне қарай */
+  let cc=[0,0];if(kind==='Ind'){const inBenz=i>=5||j>=5||(i===4&&j>=5)||(j===3&&i>=5);cc=inBenz?extra:[0,0]}
+  const p=V[i],q=V[j],mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2;let nx=cc[0]-mx,ny=cc[1]-my;const L=Math.hypot(nx,ny);nx/=L;ny/=L;
+  const o=4.5,f=0.18,a=[p[0]+(q[0]-p[0])*f+nx*o,p[1]+(q[1]-p[1])*f+ny*o],z=[q[0]+(p[0]-q[0])*f+nx*o,q[1]+(p[1]-q[1])*f+ny*o];
+  let A2=T(a),Z2=T(z);const sh=(u,w)=>{const dx=w[0]-u[0],dy=w[1]-u[1],L=Math.hypot(dx,dy);return[u[0]+dx/L*5,u[1]+dy/L*5]};
+  if(labelled.has(i))A2=sh(A2,Z2);if(labelled.has(j))Z2=sh(Z2,A2);out+=ln(A2,Z2)});
+ lab.forEach(([i,t,dx,dy])=>{const[x,y]=T(V[i]);out+=`<text x="${(x+(dx||0)).toFixed(1)}" y="${(y+(dy||0)+6.5).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="600" fill="${KR}">${t==='OH'?'OH':t}</text>`});
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W.toFixed(0)}" height="${H.toFixed(0)}" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" style="display:block;margin:0 auto;overflow:visible;font-family:inherit">${out}</svg>`};
+/* пролин — бүкіл формула қолмен: HN–CH–COOH, астында пирролидин сақинасы */
+const proSVG=()=>{const ln=(a,b2,c2,d)=>`<line x1="${a}" y1="${b2}" x2="${c2}" y2="${d}" stroke="${KR}" stroke-width="2" stroke-linecap="round"/>`;
+ const tx=(x,y,s,col,anc)=>`<text x="${x}" y="${y}" text-anchor="${anc||'middle'}" font-size="19" font-weight="600" fill="${col}">${s.replace(/(\d)/g,'<tspan font-size="13" dy="4">$1</tspan><tspan dy="-4"> </tspan>').replace(/<tspan dy="-4"> <\/tspan>$/,'')}</text>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="250" height="122" viewBox="0 0 250 122" style="display:block;margin:0 auto;font-family:inherit">`+
+ tx(62,22,'HN',KC)+ln(78,16,104,16)+tx(122,22,'CH',KC)+ln(140,16,160,16)+tx(162,22,'COOH',KC,'start')+
+ ln(62,29,52,57)+ln(122,29,132,57)+tx(46,74,'CH2',KR)+tx(138,74,'CH2',KR)+ln(58,80,84,98)+ln(132,80,108,98)+tx(96,114,'CH2',KR)+`</svg>`};
+const RAD={Ala:['CH3'],Val:['CH|–CH3','CH3'],Leu:['CH2','CH|–CH3','CH3'],Ile:['CH|–CH3','CH2','CH3'],Ser:['CH2','OH'],Thr:['CH|–OH','CH3'],
+ Cys:['CH2','SH'],Met:['(CH2)2','S','CH3'],Phe:['CH2','@Ph'],Tyr:['CH2','@Tyr'],Trp:['CH2','@Ind'],Asp:['CH2','COOH'],Glu:['(CH2)2','COOH'],
+ Asn:['CH2','CONH2'],Gln:['(CH2)2','CONH2'],Lys:['(CH2)4','NH2'],Arg:['(CH2)3','NH','C|=NH','NH2'],His:['CH2','@Im']};
+const AAF=k=>{if(k==='Pro')return proSVG();
+ const head=`<span style="position:relative;display:inline-block;color:${KC};line-height:1.15">${c(k==='Gly'?'CH2':'CH')}<span style="position:absolute;right:100%;top:0;white-space:nowrap">H${B(2)}N –&nbsp;</span><span style="position:absolute;left:100%;top:0;white-space:nowrap">&nbsp;– COOH</span></span>`;
+ const rows=(RAD[k]||[]).map(x=>bar+(x[0]==='@'?ringSVG(x.slice(1)):row(x))).join('');
+ return `<div style="display:flex;justify-content:center"><div style="display:inline-flex;flex-direction:column;align-items:center;padding:4px 0 2px;font-size:20px;font-weight:600;color:${KR};font-family:inherit"><span style="display:inline-block;padding:0 80px">${head}</span>${rows}</div></div>`};
 /* ================= А) 20 α-АМИН ҚЫШҚЫЛЫ (type:'aa') ================= */
 const chip=(x,bg,fg)=>`<span style="display:inline-block;padding:2px 10px;border-radius:999px;background:${bg};color:${fg};font-size:13px;font-weight:600;line-height:1.5;margin:3px 3px 0 0;white-space:nowrap">${x}</span>`;
 const GR={n:['полярсыз радикал','#EEF2F5','#34444F'],p:['полярлы, ионогенді емес','#E3F6EE','#1E7A55'],plus:['полярлы, ионогенді (+)','#EAF1FD','#2F5FC0'],minus:['полярлы, ионогенді (−)','#FCE9EA','#B8323C']};
@@ -3152,7 +3214,7 @@ const AA=[
  ['Гистидин','His','Гис','H','2-амино-3-(имидазол-4-ил)пропан қышқылы','plus','b','ch','7,6','β-(имидазол-4-ил)аланин; pI физиологиялық pH-қа жақын.']];
 const aaCard=([n,l3,k3,o1,iu,g,ab,es,pi,hint])=>({type:'aa',
  q:`<b>${n}</b><br><small style="display:inline-block;margin-top:8px;font-size:.55em;font-weight:600;color:#1B7DB0;letter-spacing:.02em">${l3} · ${k3} · ${o1}</small>`,
- a:`<div style="margin:0 0 8px">${fit(MOL.svg(SM[l3],{full:true,bond:30,font:18}))}</div>`+
+ a:`<div style="margin:0 0 10px">${AAF(l3)}</div>`+
  `<div style="font-size:15px;line-height:1.45;text-align:center"><div style="font-weight:700">${n} (${l3}, ${k3}, ${o1})</div><div style="color:#34444F;margin-bottom:4px">${c(iu)}</div>`+
  `<div>${chip(...GR[g])}${chip(...AB[ab])}${chip(...ES[es])}${chip('pI '+pi,'#0D1820','#fff')}</div>`+
  (hint?`<div style="margin-top:7px;font-size:14px;color:#34444F">💡 ${c(hint)}</div>`:'')+`</div>`});
@@ -3369,7 +3431,7 @@ const Z={
 
 /* ================= ЖАТТЫҒУЛАР (13) ================= */
 MODS.o12.showProb=true;
-MODS.o12.probIntro='«Шығаруға арналған жаттығулар» 1–13. Әр жаттығу толық талданған: барлық органикалық қосылыстар ашық құрылымдық формулалармен, теңдеулер теңестірілген, реагенттер мен жағдайлар (ферменттер) бағыттаманың үстінде көрсетілген, әр қадамның себебі түсіндірілген.';
+MODS.o12.probIntro='«Шығаруға арналған жаттығулар» 1–13 және пептидтің заряды, ортасы мен ИЭН-ін есептеуге 2 қосымша есеп (14, 15). Әр жаттығу толық талданған: барлық органикалық қосылыстар ашық құрылымдық формулалармен, теңдеулер теңестірілген, реагенттер мен жағдайлар (ферменттер) бағыттаманың үстінде көрсетілген, әр қадамның себебі түсіндірілген.';
 MODS.o12.problems=[
 /* ---------- 1 ---------- */
 {no:1,t:'Аланин мен аспарагин қышқылы: тұздар, биполярлы ион, қышқылдық-негіздік қасиеттері',ex:{
@@ -3559,7 +3621,36 @@ MODS.o12.problems=[
  `<b>1) Ерітіндінің pH-ы.</b> Таза суда [H${S('+')}] = 10${S('−7')} моль/л, pH = 7. Концентрация 100 есе (10${S('2')} есе) төмен:`+
  `<span class="fx">[H${S('+')}] = 10${S('−7')} / 10${S('2')} = 10${S('−9')} моль/л; pH = −lg 10${S('−9')} = <b>9</b></span>`,
  `<b>2) pH-ты pI-мен салыстыру.</b> pH 9 &gt; pI 5 — ортада OH${S('−')} иондары артық; ақуыздың –NH${B(3)}${S('+')} топтары протонсызданады, ал –COO${S('−')} топтары иондалған күйде қалады. Ақуыздың жалпы заряды <b>теріс</b> — ол анион түрінде, электр өрісінде <b>анодқа (+)</b> жылжиды.`],
- a:'pH = 9 &gt; pI = 5 → миозин теріс зарядталған (анион), анодқа жылжиды.'}}
+ a:'pH = 9 &gt; pI = 5 → миозин теріс зарядталған (анион), анодқа жылжиды.'}},
+/* ---------- Қосымша: пептидтің заряды, ортасы және ИЭН-і ---------- */
+{no:14,t:'Қосымша есеп: Сер-Гли-Асп трипептидінің заряды, ортасы және ИЭН-і',ex:{
+ q:'Сер-Гли-Асп трипептиді үшін анықтаңыз: 1) pH 7-дегі заряды; 2) ортасы (ИЭН қай аймақта); 3) ИЭН (pI) мәні. p<i>K</i><sub>a</sub> мәндерін кестеден алыңыз.',
+ s:[
+ `<b>1) Ионогенді топтарды табамыз.</b> Пептидтік байланысқа кірген α-NH${B(2)} және α-COOH топтары ионданбайды. Ионданатын топтар: N-шетіндегі серин қалдығының α-NH${B(2)} тобы, C-шетіндегі аспарагин қышқылы қалдығының α-COOH тобы және аспарагин қышқылы радикалындағы β-COOH тобы. Сериннің OH тобы мен глицин қалдығы ионданбайды.`+
+ TB(['Ионогенді топ','Қай қалдықта',PK,'pH 7-дегі заряды'],[['N-шеті: –NH'+B(3)+S('+'),'серин','9,2','<b>+1</b>'],['C-шеті: –COO'+S('−'),'аспарагин қышқылы','2,1','<b>−1</b>'],['радикал: –CH'+B(2)+'–COO'+S('−'),'аспарагин қышқылы','3,9','<b>−1</b>']]),
+ `<b>2) pH 7-дегі құрылысы және заряды.</b> pH 7 &lt; 9,2 болғандықтан амин тобы протондалған (–NH${B(3)}${S('+')}), ал pH 7 &gt; 2,1 және 3,9 болғандықтан екі карбоксил тобы да иондалған (–COO${S('−')}):`+
+ rx(BIG('[NH3+]C(CO)C(=O)NCC(=O)NC(CC(=O)[O-])C(=O)[O-]','Сер-Гли-Асп, pH 7'))+
+ `<span class="fx">Заряды = (+1) + (−1) + (−1) = <b>−1</b></span>`,
+ `<b>3) Ортасы.</b> Жалпы заряд теріс — пептидте қышқылдық топтар басым. Зарядты нөлге жеткізу үшін ортаны қышқылдандыру керек, яғни ИЭН <b>қышқылдық аймақта: pH &lt; 7</b>. Пептидтің ортасы — <b>қышқылдық</b>.`,
+ `<b>4) ИЭН (pI).</b> Сабақта ИЭН ионогенді топтардың p<i>K</i><sub>a</sub> мәндерінің орташа мәні ретінде есептеледі:`+
+ `<span class="fx">pI = (p<i>K</i><sub>a</sub>(NH${B(3)}${S('+')}) + p<i>K</i><sub>a</sub>(α-COOH) + p<i>K</i><sub>a</sub>(β-COOH)) / 3 = (9,2 + 2,1 + 3,9) / 3 = 15,2 / 3 ≈ <b>5,1</b></span>`+
+ `pI ≈ 5,1 &lt; 7 — бұл 3-қадамдағы қорытындыны (ортасы қышқылдық) растайды.`,
+ N(`Дәл есептеуде pI зарядсыз түрдің екі жағындағы p<i>K</i><sub>a</sub> мәндерінің орташасы ретінде табылады: Сер-Гли-Асп үшін (2,1 + 3,9) / 2 = 3,0. Сабақтағы жоғарыдағы әдіс — жуық әдіс; екеуі де ИЭН-нің қышқылдық аймақта екенін көрсетеді.`)],
+ a:'pH 7-де заряды −1 (анион); ортасы қышқылдық (pH &lt; 7); pI = (9,2 + 2,1 + 3,9)/3 ≈ 5,1.'}},
+{no:15,t:'Қосымша есеп: Лиз-Гли-Ала трипептидінің заряды, ортасы және ИЭН-і',ex:{
+ q:'Лиз-Гли-Ала трипептиді үшін анықтаңыз: 1) pH 7-дегі заряды; 2) ортасы; 3) ИЭН (pI) мәні.',
+ s:[
+ `<b>1) Ионогенді топтар.</b> N-шетіндегі лизин қалдығының α-NH${B(2)} тобы, лизин радикалындағы ε-NH${B(2)} тобы және C-шетіндегі аланин қалдығының α-COOH тобы. Глицин мен аланин радикалдары ионданбайды.`+
+ TB(['Ионогенді топ','Қай қалдықта',PK,'pH 7-дегі заряды'],[['N-шеті: α-NH'+B(3)+S('+'),'лизин','9,0','<b>+1</b>'],['радикал: ε-NH'+B(3)+S('+'),'лизин','10,5','<b>+1</b>'],['C-шеті: –COO'+S('−'),'аланин','2,3','<b>−1</b>']]),
+ `<b>2) pH 7-дегі құрылысы және заряды.</b> pH 7 &lt; 9,0 және 10,5 — екі амин тобы да протондалған; pH 7 &gt; 2,3 — карбоксил тобы иондалған:`+
+ rx(BIG('[NH3+]CCCCC([NH3+])C(=O)NCC(=O)NC(C)C(=O)[O-]','Лиз-Гли-Ала, pH 7'))+
+ `<span class="fx">Заряды = (+1) + (+1) + (−1) = <b>+1</b></span>`,
+ `<b>3) Ортасы.</b> Жалпы заряд оң — негіздік топтар басым. Зарядты нөлге жеткізу үшін ортаны сілтілендіру керек: ИЭН <b>pH &gt; 7</b> аймақта. Пептидтің ортасы — <b>негіздік</b>.`,
+ `<b>4) ИЭН (pI)</b> — сабақтағы әдіспен:`+
+ `<span class="fx">pI = (9,0 + 10,5 + 2,3) / 3 = 21,8 / 3 ≈ <b>7,3</b></span>`+
+ `pI &gt; 7 — ортасы негіздік.`,
+ N(`Дәл есептеуде зарядсыз түрдің екі жағындағы p<i>K</i><sub>a</sub> алынады: (9,0 + 10,5) / 2 ≈ 9,8.`)],
+ a:'pH 7-де заряды +1 (катион); ортасы негіздік (pH &gt; 7); pI = (9,0 + 10,5 + 2,3)/3 ≈ 7,3.'}}
 ];
 
 /* ================= ОСӨЖ (6 тапсырма) ================= */
