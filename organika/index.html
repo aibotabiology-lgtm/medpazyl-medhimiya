@@ -2661,6 +2661,281 @@ MODS.o11.tests.bekitu=[
 ];
 })();
 
+/* ===== o12: амин қышқылдары мен пептидтерді «жаттауға ыңғайлы» түрде салу =====
+   H₂N–CH–COOH негізі көлденең, радикал CH-тан төмен қарай тігінен (мұғалімнің жазуындай).
+   o12 бөлігінде MOL.svg уақытша ауыстырылады: SMILES амин қышқылы / пептид болса — осы түрде,
+   әйтпесе бұрынғыдай қаңқалық формула. o12 соңында MOL.svg қалпына келтіріледі. */
+(()=>{
+const KR='#0D1820';
+const c=s=>String(s).replace(/([A-Za-z\)\]])(\d+)/g,'$1<sub>$2</sub>').replace(/\^\+/g,'<sup>+</sup>').replace(/\^-/g,'<sup>−</sup>');
+const ringSVG=kind=>{
+ const b=30,P=(r,a)=>[r*Math.cos(a*Math.PI/180),-r*Math.sin(a*Math.PI/180)];
+ let V=[],E=[],D=[],lab=[],extra='';
+ const r5=b/(2*Math.sin(Math.PI/5));
+ if(kind==='Ph'||kind==='Tyr'){V=[90,30,-30,-90,-150,150].map(a=>P(b,a));E=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]];D=[[1,2],[3,4],[5,0]];
+  if(kind==='Tyr'){const[x,y]=V[3];V.push([x,y+19]);E.push([3,6]);lab.push([6,"OH",0,8])}}
+ if(kind==='Im'){V=[90,18,-54,-126,162].map(a=>P(r5,a));E=[[0,1],[1,2],[2,3],[3,4],[4,0]];D=[[0,1],[3,4]];
+  lab.push([4,'N'],[2,'N']);const[x,y]=V[2];V.push([x,y+28]);E.push([2,5]);lab.push([5,'H',0,6])}
+ if(kind==='Ind'){V=[90,18,-54,-126,162].map(a=>P(r5,a));E=[[0,1],[1,2],[2,3],[3,4],[4,0]];D=[[0,1]];
+  const A=V[4],B=V[3],mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2,cx5=0,cy5=0;let nx=mx-cx5,ny=my-cy5;const nl=Math.hypot(nx,ny);nx/=nl;ny/=nl;
+  const ap=b*Math.sqrt(3)/2,hc=[mx+nx*ap,my+ny*ap];
+  const ang=Math.atan2(A[1]-hc[1],A[0]-hc[0]),hv=[];for(let k=0;k<6;k++){const t=ang+k*Math.PI/3;hv.push([hc[0]+b*Math.cos(t),hc[1]+b*Math.sin(t)])}
+  /* hv[0]=C3a; бағыт тексеріледі: hv[5] немесе hv[1] C7a-ға тең болуы керек */
+  let seq=Math.hypot(hv[5][0]-B[0],hv[5][1]-B[1])<1?[0,1,2,3,4]:[0,5,4,3,2];
+  const i0=V.length;[1,2,3,4].forEach(k=>V.push(hv[seq[k]]));      /* C4,C5,C6,C7 */
+  E.push([4,i0],[i0,i0+1],[i0+1,i0+2],[i0+2,i0+3],[i0+3,3]);D.push([4,i0],[i0+1,i0+2],[i0+3,3]);
+  lab.push([2,'N']);const[x,y]=V[2];V.push([x,y+28]);E.push([2,V.length-1]);lab.push([V.length-1,'H',0,6]);
+  extra=hc}
+ const ap=V[0];const xs=V.map(v=>v[0]-ap[0]),ys=V.map(v=>v[1]-ap[1]);
+ const half=Math.max(...xs.map(Math.abs))+16,H=Math.max(...ys)+(kind==='Tyr'?22:14),W=2*half;
+ const T=([x,y])=>[x-ap[0]+half,y-ap[1]+1];
+ const cen=kind==='Ind'?null:[0,0];
+ const ln=(p,q,o)=>`<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" stroke="${KR}" stroke-width="${o||2}" stroke-linecap="round"/>`;
+ let out='';
+ const labelled=new Set(lab.map(l=>l[0]));
+ E.forEach(([i,j])=>{let p=T(V[i]),q=T(V[j]);const sh=(u,w)=>{const dx=w[0]-u[0],dy=w[1]-u[1],L=Math.hypot(dx,dy);return[u[0]+dx/L*10,u[1]+dy/L*10]};
+  if(labelled.has(i))p=sh(p,q);if(labelled.has(j))q=sh(q,p);out+=ln(p,q)});
+ D.forEach(([i,j])=>{/* ішкі сызық сақина центріне қарай */
+  let cc=[0,0];if(kind==='Ind'){const inBenz=i>=5||j>=5||(i===4&&j>=5)||(j===3&&i>=5);cc=inBenz?extra:[0,0]}
+  const p=V[i],q=V[j],mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2;let nx=cc[0]-mx,ny=cc[1]-my;const L=Math.hypot(nx,ny);nx/=L;ny/=L;
+  const o=4.5,f=0.18,a=[p[0]+(q[0]-p[0])*f+nx*o,p[1]+(q[1]-p[1])*f+ny*o],z=[q[0]+(p[0]-q[0])*f+nx*o,q[1]+(p[1]-q[1])*f+ny*o];
+  let A2=T(a),Z2=T(z);const sh=(u,w)=>{const dx=w[0]-u[0],dy=w[1]-u[1],L=Math.hypot(dx,dy);return[u[0]+dx/L*5,u[1]+dy/L*5]};
+  if(labelled.has(i))A2=sh(A2,Z2);if(labelled.has(j))Z2=sh(Z2,A2);out+=ln(A2,Z2)});
+ lab.forEach(([i,t,dx,dy])=>{const[x,y]=T(V[i]);out+=`<text x="${(x+(dx||0)).toFixed(1)}" y="${(y+(dy||0)+6.5).toFixed(1)}" text-anchor="middle" font-size="18" font-weight="600" fill="${KR}">${t==='OH'?'OH':t}</text>`});
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${W.toFixed(0)}" height="${H.toFixed(0)}" viewBox="0 0 ${W.toFixed(1)} ${H.toFixed(1)}" style="display:block;margin:0 auto;overflow:visible;font-family:inherit">${out}</svg>`};
+
+const ESC=t=>t;
+/* ---------- графтан шартты жазба ---------- */
+function build(s){
+ const m=MOL.parse(s); if(!m||!m.atoms)return null;
+ const A=m.atoms,NB=m.nb;
+ const OK=new Set(['C','N','O','S','P','Na','Cl','R']);
+ if(A.some(a=>!OK.has(a.el)))return null;
+ const parts={};A.forEach((a,i)=>{(parts[a.part]=parts[a.part]||[]).push(i)});
+ const pk=Object.keys(parts);const big=pk.filter(k=>parts[k].length>1);
+ if(big.length!==1)return null;
+ const ions=pk.filter(k=>parts[k].length===1).map(k=>A[parts[k][0]]);
+ if(ions.some(a=>!((a.el==='Na'&&a.ch===1)||(a.el==='Cl'&&a.ch===-1))))return null;
+ const nbs=i=>NB[i]||[];
+ const isC=i=>A[i].el==='C';
+ const dblO=i=>nbs(i).filter(e=>e.o===2&&A[e.to].el==='O').map(e=>e.to);
+ const carbonyl=i=>isC(i)&&dblO(i).length===1;
+ /* Cα: sp3 C, бір N (дара байланыс) және бір карбонил C' көршісі */
+ const res=[];
+ A.forEach((a,i)=>{if(!isC(i)||nbs(i).some(e=>e.o!==1))return;
+  const ns=nbs(i).filter(e=>A[e.to].el==='N'),cs=nbs(i).filter(e=>carbonyl(e.to));
+  if(ns.length!==1||!cs.length)return;
+  const cp=cs.find(e=>{const x=e.to;const o2=nbs(x).filter(f=>f.o===1&&f.to!==i);return o2.length===1&&(A[o2[0].to].el==='O'||A[o2[0].to].el==='N')});
+  if(!cp)return; res.push({ca:i,n:ns[0].to,cp:cp.to})});
+ if(!res.length)return null;
+ /* тізбек: C'(i)–N(i+1) */
+ const byN={};res.forEach(r=>byN[r.n]=r);
+ res.forEach(r=>{const x=nbs(r.cp).find(e=>e.o===1&&e.to!==r.ca&&A[e.to].el==='N');r.next=x&&byN[x.to]?byN[x.to]:null;if(r.next)r.next.prev=r});
+ const starts=res.filter(r=>!r.prev);
+ if(starts.length!==1&&starts.length!==2)return null;
+ const seq=[];if(starts.length===1){for(let r=starts[0];r;r=r.next){seq.push(r);if(seq.length>12)return null}
+ if(seq.length!==res.length)return null}
+ const used=new Set();seq.forEach(r=>{used.add(r.ca);used.add(r.n);used.add(r.cp);dblO(r.cp).forEach(o=>used.add(o))});
+ /* атом белгісі */
+ const lab=i=>{const a=A[i];let t=a.el==='R'?'R':a.el;if(a.h)t+='H'+(a.h>1?a.h:'');if(a.ch===1)t+='^+';if(a.ch===-1)t+='^-';return t};
+ /* соңғы топтарды бір белгіге жинау (бала атомнан бастап, ата-анасы p) */
+ const fold=(i,p)=>{const a=A[i];const ch=nbs(i).filter(e=>e.to!==p);
+  if(!ch.length)return lab(i);
+  if(a.el==='C'){const d=ch.filter(e=>e.o===2&&A[e.to].el==='O');const s1=ch.filter(e=>e.o===1);
+   if(d.length===1&&s1.length===1&&!nbs(s1[0].to).some(f=>f.to!==i)){const x=A[s1[0].to];
+    if(x.el==='O'&&x.h===1)return 'COOH';if(x.el==='O'&&x.ch===-1)return 'COO^-';if(x.el==='N'&&x.h===2)return 'CONH2'}
+   if(d.length===1&&s1.length===1&&A[s1[0].to].el==='O'){const o=s1[0].to;const na=nbs(o).find(f=>f.to!==i&&A[f.to].el==='Na'&&nbs(f.to).length===1);if(na)return 'COONa'}
+   if(ch.length===2&&!a.h){/* C(=NH)NH2 */}
+  }
+  if(a.el==='S'&&ch.length===3){const d=ch.filter(e=>e.o===2&&A[e.to].el==='O'),s1=ch.filter(e=>e.o===1&&A[e.to].el==='O'&&A[e.to].h===1&&nbs(e.to).length===1);if(d.length===2&&s1.length===1)return 'SO3H'}
+  if(a.el==='O'&&ch.length===1&&A[ch[0].to].el==='P'){const P=ch[0].to,pc=nbs(P).filter(e=>e.to!==i);const d=pc.filter(e=>e.o===2&&A[e.to].el==='O'),s1=pc.filter(e=>e.o===1&&A[e.to].el==='O'&&A[e.to].h===1&&nbs(e.to).length===1);if(d.length===1&&s1.length===2)return 'O–PO3H2'}
+  if(a.el==='N'&&ch.length===2&&ch.every(e=>e.o===2?A[e.to].el==='O':A[e.to].el==='O'&&A[e.to].ch===-1))return 'NO2';
+  return null};
+ const size=(i,p,seen)=>{seen=seen||new Set([p]);if(seen.has(i))return 0;seen.add(i);let n=1;nbs(i).forEach(e=>{if(!seen.has(e.to))n+=size(e.to,i,seen)});return n};
+ /* сақиналарды тану */
+ const ringOf=i=>{/* i атомы сақинада ма (қарапайым тексеру: Ph/Tyr/Im/Ind) */
+  const R=(m.rings||[]);return null};
+ const RINGS=(MOL.rings?MOL.rings(m):m.rings)||[];
+ const inRing=i=>RINGS.some(r=>r.includes(i));
+ const ringKind=(i,p)=>{/* i — сақинаның CH2-ге қосылған атомы */
+  const sys=new Set();const st=[i];while(st.length){const x=st.pop();if(sys.has(x))continue;if(!RINGS.some(r=>r.includes(x)))continue;sys.add(x);nbs(x).forEach(e=>{if(e.to!==p&&RINGS.some(r=>r.includes(e.to)))st.push(e.to)})}
+  const at=[...sys];const nN=at.filter(x=>A[x].el==='N').length,nC=at.filter(x=>A[x].el==='C').length;
+  const subs=[];at.forEach(x=>nbs(x).forEach(e=>{if(!sys.has(e.to)&&e.to!==p)subs.push([x,e.to])}));
+  if(nC===6&&nN===0&&at.length===6){ if(!subs.length)return 'Ph';
+   if(subs.length===1&&A[subs[0][1]].el==='O'&&A[subs[0][1]].h===1){/* пара? */
+    const dist=(u,v)=>{const q=[[u,0]],sn=new Set([u]);while(q.length){const[x,d]=q.shift();if(x===v)return d;nbs(x).forEach(e=>{if(sys.has(e.to)&&!sn.has(e.to)){sn.add(e.to);q.push([e.to,d+1])}})}return -1};
+    if(dist(i,subs[0][0])===3)return 'Tyr'}
+   return null}
+  if(at.length===5&&nN===2&&!subs.length){/* имидазол-4-ил: i-ге N3 (H жоқ) және C5 көрші */return 'Im'}
+  if(at.length===9&&nN===1&&!subs.length)return 'Ind';
+  return null};
+ /* радикалды жолдарға бөлу */
+ const rows=[];
+ const walk=(i,p)=>{let guard=0;
+  while(i!=null&&guard++<20){
+   const f=fold(i,p);
+   if(f&&!(f===lab(i)&&nbs(i).filter(e=>e.to!==p).length)){rows.push(f);return true}
+   if(inRing(i)){const k=ringKind(i,p);if(!k)return false;rows.push('@'+k);return true}
+   const ch=nbs(i).filter(e=>e.to!==p);
+   if(A[i].el==='C'&&!A[i].h&&ch.length===2&&ch.filter(e=>e.o===2&&A[e.to].el==='O'&&nbs(e.to).length===1).length===1){
+    const rest=ch.filter(e=>e.o===1);if(rest.length===1&&A[rest[0].to].el==='C'){rows.push('C|=O');p=i;i=rest[0].to;continue}}
+   if(ch.some(e=>e.o!==1)){/* C=NH (аргинин) */
+    const d=ch.filter(e=>e.o===2);if(A[i].el==='C'&&d.length===1&&A[d[0].to].el==='N'&&A[d[0].to].h===1&&nbs(d[0].to).length===1){
+     const rest=ch.filter(e=>e.o===1);if(rest.length!==1)return false;rows.push('C|=NH');p=i;i=rest[0].to;continue}
+    return false}
+   if(ch.length===1){rows.push(lab(i));p=i;i=ch[0].to;continue}
+   if(ch.length===2){
+    const fs=ch.map(e=>({e,f:fold(e.to,i),sz:size(e.to,i)}));
+    let suf,main;
+    const het=fs.filter(x=>x.f&&x.f!=='CH3');
+    if(het.length===1&&fs.length===2){suf=het[0];main=fs.find(x=>x!==suf)}
+    else{fs.sort((a,b)=>a.sz-b.sz);if(!fs[0].f)return false;suf=fs[0];main=fs[1]}
+    const sl=suf.f.startsWith('O–')?suf.f:suf.f;
+    rows.push(lab(i)+'|–'+sl);p=i;i=main.e.to;continue}
+   return false}
+  return true};
+ if(starts.length===2)return special(starts);
+ if(starts.length!==1)return null;
+ /* қалдықтар */
+ const R=seq.map((r,k)=>{
+  const side=nbs(r.ca).filter(e=>e.to!==r.n&&e.to!==r.cp).map(e=>e.to);
+  const o={ca:r.ca,lab:lab(r.ca),rows:[],pro:false};
+  if(side.length>1)return null;
+  if(side.length===1){
+   const sc=side[0];
+   /* пролин: радикал α-N-ге қайта жалғанады */
+   if(inRing(sc)&&inRing(r.n)&&RINGS.some(rg=>rg.includes(sc)&&rg.includes(r.n)&&rg.includes(r.ca)&&rg.length===5)){
+    const rg=RINGS.find(rg=>rg.includes(sc)&&rg.includes(r.n)&&rg.includes(r.ca));
+    if(!rg.every(x=>x===r.n||x===r.ca||(A[x].el==='C'&&A[x].h===2)))return null;
+    o.pro=true}
+   else{rows.length=0;if(!walk(sc,r.ca))return null;o.rows=rows.slice()}
+  }
+  return o});
+ if(R.some(x=>!x))return null;
+ /* CH2 тізбектерін (CH2)n етіп жинау */
+ R.forEach(o=>{const out=[];o.rows.forEach(t=>{const L=out[out.length-1];
+   if(t==='CH2'&&L&&/^(CH2|\(CH2\)\d)$/.test(L)){const n=L==='CH2'?2:(+L.match(/\d$/)[0])+1;out[out.length-1]='(CH2)'+n}else out.push(t)});o.rows=out});
+ /* N-шеті */
+ const n0=seq[0].n,na=A[n0];
+ const nExtra=nbs(n0).filter(e=>e.to!==seq[0].ca&&!(R[0].pro&&RINGS.some(rg=>rg.includes(e.to)&&rg.includes(n0))));
+ let left;
+ if(R[0].pro){left=na.ch===1?'H2N^+':'HN'; if(nExtra.length)return null}
+ else if(!nExtra.length){left=na.h===3?'H3N^+':na.h===2?'H2N':null;if(!left)return null}
+ else if(nExtra.length===1&&carbonyl(nExtra[0].to)){const cc=nExtra[0].to;const oth=nbs(cc).filter(e=>e.to!==n0&&e.o===1);
+  if(oth.length===1&&A[oth[0].to].el==='C'&&A[oth[0].to].h===3&&na.h===1)left='CH3–CO–NH';else return null}
+ else return null;
+ /* ішкі N-дер */
+ const midN=seq.slice(1).map((r,k)=>{const a=A[r.n];return{h:a.h,pro:R[k+1].pro}});
+ /* C-шеті */
+ const cl=seq[seq.length-1].cp;const x=nbs(cl).find(e=>e.o===1&&e.to!==seq[seq.length-1].ca);
+ const xa=A[x.to];let right;
+ if(xa.el==='O'&&xa.h===1&&nbs(x.to).length===1)right='COOH';
+ else if(xa.el==='O'&&xa.ch===-1)right='COO^-';
+ else if(xa.el==='O'&&nbs(x.to).length===2){const y=nbs(x.to).find(e=>e.to!==cl).to;
+  if(A[y].el==='Na')right='COONa';
+  else if(A[y].el==='C'&&A[y].h===2&&nbs(y).length===2){const z=nbs(y).find(e=>e.to!==x.to).to;if(A[z].el==='C'&&A[z].h===3)right='COOC2H5';else return null}
+  else return null}
+ else return null;
+ function termL(r){const na=A[r.n];const ex=nbs(r.n).filter(e=>e.to!==r.ca);if(ex.length)return null;return na.h===3?'H3N^+':na.h===2?'H2N':null}
+ function termR(r){const x=nbs(r.cp).find(e=>e.o===1&&e.to!==r.ca);const xa=A[x.to];if(xa.el==='O'&&xa.h===1&&nbs(x.to).length===1)return 'COOH';if(xa.el==='O'&&xa.ch===-1)return 'COO^-';return null}
+ function special(st){
+  const [a,b]=st;
+  /* цистин: екі бос амин қышқылы, радикалдары –CH2–S–S–CH2– */
+  if(!a.next&&!b.next){
+   const sideOf=r=>nbs(r.ca).filter(e=>e.to!==r.n&&e.to!==r.cp).map(e=>e.to);
+   const sa=sideOf(a),sb=sideOf(b);if(sa.length!==1||sb.length!==1)return null;
+   const S1=nbs(sa[0]).find(e=>A[e.to].el==='S'),S2=nbs(sb[0]).find(e=>A[e.to].el==='S');
+   if(!S1||!S2||!nbs(S1.to).some(e=>e.to===S2.to))return null;
+   const L1=termL(a),L2=termL(b),R1=termR(a),R2=termR(b);if(!L1||!L2||!R1||!R2)return null;
+   return {cyst:{L1,L2,R1,R2}}}
+  /* глутатион: γ-Глу қалдығының радикалы келесі қалдықтың N-імен байланысқан */
+  for(const [x,y] of [[a,b],[b,a]]){
+   const side=nbs(x.ca).filter(e=>e.to!==x.n&&e.to!==x.cp).map(e=>e.to);if(side.length!==1)continue;
+   const path=[];let i=side[0],p=x.ca,ok=false;
+   for(let g=0;g<6;g++){const at=A[i];
+    if(at.el==='C'&&at.h===2&&nbs(i).length===2){path.push('CH2');const nx=nbs(i).find(e=>e.to!==p).to;p=i;i=nx;continue}
+    if(carbonyl(i)&&nbs(i).some(e=>e.to===y.n)){ok=true;break}
+    break}
+   if(!ok)continue;
+   const L=termL(x),Rr=termR(x);if(!L||!Rr)return null;
+   /* y-тен басталатын пептид */
+   const sq=[];for(let r=y;r;r=r.next)sq.push(r);
+   const rest=[];
+   for(const r of sq){const side2=nbs(r.ca).filter(e=>e.to!==r.n&&e.to!==r.cp).map(e=>e.to);rows.length=0;
+    if(side2.length===1){if(!walk(side2[0],r.ca))return null}else if(side2.length>1)return null;
+    rest.push({lab:lab(r.ca),rows:rows.slice(),h:A[r.n].h})}
+   const last=sq[sq.length-1];const RR=termR(last);if(!RR)return null;
+   const cols=[{mid:c(Rr==='COOH'?'HOOC':'<sup>−</sup>OOC')},{mid:'–',dash:1},{mid:c('CH'),rad:[L.replace('H3N^+','NH3^+').replace('H2N','NH2')]}];
+   path.forEach(t=>{cols.push({mid:'–',dash:1},{mid:c(t)})});
+   rest.forEach((r,k)=>{cols.push({mid:'–',dash:1},{mid:'C',top:'O',topb:dbl},{mid:'–',dash:1},{mid:'N',top:r.h?'H':'',topb:r.h?bar:''},{mid:'–',dash:1},{mid:c(r.lab),rad:r.rows})});
+   cols.push({mid:'–',dash:1},{mid:c(RR),cterm:1});
+   return {cols}}
+  return null}
+ /* барлық атом қамтылды ма — тексеру */
+ return {left,R,midN,right,ions:ions.map(a=>a.el==='Na'?'Na^+':'Cl^-')}}
+
+/* ---------- HTML салу ---------- */
+const bar=`<span style="display:block;width:2px;height:12px;background:${KR};margin:2px auto"></span>`;
+const dbl=`<span style="display:block;width:7px;height:12px;border-left:2px solid ${KR};border-right:2px solid ${KR};box-sizing:border-box;margin:2px auto"></span>`;
+const rowL=t=>{const [a,b]=t.split('|');if(!b)return `<span style="display:inline-block;white-space:nowrap">${c(a)}</span>`;return `<span style="display:inline-block;white-space:nowrap"><span style="visibility:hidden">${c(b)}</span>${c(a)}<span>${c(b)}</span></span>`};
+const radStack=rows=>rows.map(t=>bar+(t[0]==='@'?ringSVG(t.slice(1)):`<span style="display:block;text-align:center">${rowL(t)}</span>`)).join('');
+const wrap=(inner,fs,extra)=>`<span class="aav" style="display:inline-flex;flex-direction:column;align-items:center;font-size:${fs}px;font-weight:600;color:${KR};line-height:1.2;font-family:inherit;padding:2px 4px 4px;${extra||''}">${inner}</span>`;
+/* ұзындықты шамалау (em): жоғарғы/төменгі индекстер жіңішке */
+const em=t=>{const x=String(t).replace(/<sub>(.*?)<\/sub>|<sup>(.*?)<\/sup>/g,(m,a,b)=>'§'.repeat(((a||b)||'').length)).replace(/&nbsp;/g,' ').replace(/<[^>]+>/g,'');let w=0;for(const ch of x)w+=ch==='§'?0.42:/[–\-]/.test(ch)?0.55:ch===' '?0.28:/[A-ZА-Я]/.test(ch)?0.68:0.56;return w};
+function single(d,fs){
+ const r=d.R[0];const L=c(d.left)+'–',Rt='–'+c(d.right)+(d.ions.length?'&nbsp;&nbsp;'+d.ions.map(c).join(' '):'');
+ const cell=(col,row,h,al)=>`<span style="grid-column:${col};grid-row:${row};white-space:nowrap;justify-self:${al||'center'}">${h}</span>`;
+ const inner=cell(1,1,L,'end')+cell(2,1,c(r.lab))+cell(3,1,Rt,'start')+(r.rows.length?`<span style="grid-column:1 / 4;grid-row:2;justify-self:center;text-align:center">${radStack(r.rows)}</span>`:'');
+ return `<span class="aav" style="display:inline-grid;grid-template-columns:1fr auto 1fr;font-size:${fs}px;font-weight:600;color:${KR};line-height:1.2;font-family:inherit;padding:2px 4px 4px">${inner}</span>`}
+function cystine(x,fs){
+ const g=(ci,ri,h,ex)=>`<span style="grid-column:${ci};grid-row:${ri};text-align:center;white-space:nowrap;${ex||''}">${h}</span>`;
+ const pre=t=>`<span style="position:relative;display:inline-block">${c('CH')}<span style="position:absolute;right:100%;top:0;white-space:nowrap">${c(t)}–</span></span>`;
+ const suf=t=>`<span style="position:relative;display:inline-block">${c('CH')}<span style="position:absolute;left:100%;top:0;white-space:nowrap">–${c(t)}</span></span>`;
+ const NH=t=>t==='H3N^+'?'NH3^+':'NH2';
+ const inner=g(1,1,c('CH2'))+g(2,1,'–')+g(3,1,'S')+g(4,1,'–')+g(5,1,'S')+g(6,1,'–')+g(7,1,c('CH2'))+
+  g(1,2,bar)+g(7,2,bar)+g(1,3,pre(d0(x.L1)))+g(7,3,suf(NH(x.L2)))+g(1,4,bar)+g(7,4,bar)+g(1,5,c(x.R1))+g(7,5,c(x.R2==='COOH'?'HOOC':x.R2==='COO^-'?'^-OOC':x.R2));
+ return `<span class="aav" style="display:inline-grid;grid-template-columns:auto auto auto auto auto auto auto;justify-items:center;font-size:${fs}px;font-weight:600;color:${KR};line-height:1.2;padding:2px 3.2em 4px">${inner}</span>`}
+const d0=t=>t;
+function html(d,fs){
+ if(d.cyst)return cystine(d.cyst,fs);
+ if(d.cols)return grid(d.cols,fs);
+ if(d.R.length===1&&!d.R[0].pro)return single(d,fs);
+ const cols=[];
+ const dash=()=>cols.push({mid:'–',dash:1});
+ const R=d.R;
+ cols.push({mid:c(d.left),nterm:1,pro:R[0].pro});
+ R.forEach((r,k)=>{
+  if(k>0){dash();cols.push({mid:'C',top:'O',topb:dbl});dash();const mn=d.midN[k-1];cols.push({mid:'N',top:mn.h?'H':'',topb:mn.h?bar:'',pro:r.pro})}
+  dash();cols.push({mid:c(r.lab),rad:r.rows,ca:1,pro:r.pro});
+ });
+ dash();cols.push({mid:c(d.right)+(d.ions.length?'&nbsp;&nbsp;'+d.ions.map(c).join(' '):''),cterm:1});
+ return grid(cols,fs)}
+function grid(cols,fs){
+ let g='';const st=(ci,ri)=>`grid-column:${ci+1};grid-row:${ri+1};`;
+ const hasTop=cols.some(x=>x.top);const r0=hasTop?2:0;
+ cols.forEach((x,ci)=>{
+  if(x.top){g+=`<span style="${st(ci,0)}text-align:center">${x.top}</span><span style="${st(ci,1)}">${x.topb}</span>`}
+  g+=`<span style="${st(ci,r0)}text-align:center;white-space:nowrap;${x.dash?'padding:0 1px':''}">${x.mid}</span>`;
+  if(x.rad&&x.rad.length&&!x.pro)g+=`<span style="${st(ci,r0+1)}align-self:start;text-align:center">${radStack(x.rad)}</span>`;
+  if(x.pro&&x.ca){const nci=ci-2;
+   g+=`<span style="grid-column:${nci+1} / ${ci+2};grid-row:${r0+2};display:grid;grid-template-columns:subgrid;align-self:start">`+
+    `<span style="grid-column:1;text-align:center">${bar}${c('CH2')}</span><span style="grid-column:3;text-align:center">${bar}${c('CH2')}</span>`+
+    `<span style="grid-column:1 / 4;grid-row:2;text-align:center;line-height:1"><svg viewBox="0 0 100 16" preserveAspectRatio="none" style="display:block;width:100%;height:14px"><line x1="24" y1="1" x2="42" y2="15" stroke="${KR}" stroke-width="2" vector-effect="non-scaling-stroke"/><line x1="76" y1="1" x2="58" y2="15" stroke="${KR}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>${c('CH2')}</span></span>`}
+ });
+ const tpl=cols.map(x=>x.pro&&(x.ca||x.nterm||x.mid==='N')?'3.2em':'auto').join(' ');
+ return `<span class="aav" style="display:inline-grid;grid-template-columns:${tpl};align-items:start;justify-items:center;font-size:${fs}px;font-weight:600;color:${KR};line-height:1.2;font-family:inherit;padding:2px 4px 4px">${g}</span>`}
+
+const AAV={build,html,render(s,o){try{if(typeof s!=='string'||/\[(Cα|~|—|R')\]|\[H\]/.test(s))return null;const d=build(s);if(!d)return null;const h=html(d,Math.round(((o&&o.font)||14)*1.12));return `<span class="aavw" style="display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;text-align:center;-webkit-overflow-scrolling:touch">${h}</span>`}catch(e){return null}}};
+window.AAV=AAV;
+/* тар экранда кең формуланы кішірейту (zoom) */
+if(!window.__aavFit){window.__aavFit=1;let q=0;
+ const fitAll=()=>{q=0;document.querySelectorAll('.aavw').forEach(w=>{const a=w.firstElementChild;if(!a)return;a.style.zoom='';const cw=w.clientWidth;if(!cw)return;const sw=a.scrollWidth||a.getBoundingClientRect().width;if(sw>cw+1)a.style.zoom=Math.max(0.8,(cw-2)/sw).toFixed(3)})};
+ const sch=()=>{if(!q){q=1;requestAnimationFrame(fitAll)}};
+ new MutationObserver(sch).observe(document.documentElement,{childList:true,subtree:true});addEventListener('resize',sch);addEventListener('load',sch)}
+const _svg=MOL.svg;window.__MOLsvg=_svg;
+MOL.svg=function(s,o){const h=AAV.render(s,o);return h||_svg.apply(this,arguments)};
+})();
+
 /* o12: Амин қышқылдары, пептидтер, ақуыздар — сабаққа дайындалу сұрақтары 1–8 бойынша */
 (()=>{
 const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`;
@@ -4218,6 +4493,7 @@ const V=MODS.o12.tests.variants=MODS.o12.tests.variants||{};
 V['1']=b1;V['2']=b2;V['3']=b3;V['4']=b4;V['5']=b5;V['6']=b6;V['1-1']=c1;V['2-2']=c2;V['3-3']=c3;V['4-4']=c4;
 })();
 
+if(window.__MOLsvg)MOL.svg=window.__MOLsvg;
 /* o13: Көмірсулар. Моносахаридтер. Моносахаридтердің химиялық қасиеттері — Тюкавкина т.б., 11-тарау (11.1) */
 (()=>{const S=x=>`<sup>${x}</sup>`,B=x=>`<sub>${x}</sub>`;
 const TB=(head,rows)=>`<div class="tbl-wrap"><table class="tt"><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
